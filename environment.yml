@@ -1,0 +1,22 @@
+#environment requirements for the project
+#to initialize the environment, run the following command in your terminal:
+#conda env create -f environment.yml
+#to activate the environment, run:
+#conda activate <environment_name>
+
+name: ml_emotion_recognition
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+      - opencv-python
+      - pillow
+      - scikit-image
+      - pyfume
+      - dlib
+      - imbalance-learn
+      - seaborn
+      - numpy
+      - pandas
+      - matplotlib
+  - conda-forge::jupyterlab
