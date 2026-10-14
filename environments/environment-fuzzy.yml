@@ -1,7 +1,6 @@
 name: emotion_fuzzy
 channels:
   - conda-forge
-channel_priority: strict
 dependencies:
   - python=3.10
   - numpy=1.24.4

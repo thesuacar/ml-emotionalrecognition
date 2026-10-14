@@ -168,12 +168,14 @@ three people - T01--T03 and T23: agree an owner together
 
 -   [ ] **Task:** Use `dlib` to extract 3--10 handcrafted geometric
     features, such as mouth width and eye opening.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** HENRIQUE COUTO **Due:** 16/10/2026
     **Estimate:** 30 min
 -   **Done when:** A DataFrame of geometric features is generated for
     KDEF.
 -   **Evidence / notes:**
-    \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Standard 68-point predictor was used 
+	source: `https://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2`
 
 ### T12 · Build and train the fuzzy classifier
 
