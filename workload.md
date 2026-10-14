@@ -25,6 +25,7 @@ performance challenge, and a real-time webcam demo.
 
 ### Team planning
 
+## Please write your names here
 Team members: **A:** Su Acar (2475901) **B:** \_\_\_\_\_\_\_\_\_\_
 **C:** \_\_\_\_\_\_\_\_\_\_
 
@@ -79,10 +80,12 @@ three people - T01--T03 and T23: agree an owner together
 
 ## Phase 2 --- Task 1: Baseline models
 
+NOTES: Su did this phase altogether. The training, tuning, and testing takes a very long time. If possible, consider using the pushed pkl files for the rest of the assignment. Documentation for the report can be found at the end of baseline_fer2013_landmarks.ipynb. There are some result values that are useful for the reports
+
 ### T04 · Build HOG and PCA feature extraction
 
 -   [ ] **Task:** Implement HOG and PCA feature-extraction pipelines.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** Su Acar **Due:** October 11
     **Estimate:** 25 min
 -   **Done when:** Functions convert `48x48` images into HOG and PCA
     feature arrays.
