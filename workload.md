@@ -169,7 +169,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 ### T11 · Extract geometric features
 
--   [ ] **Task:** Use `dlib` to extract 3--10 handcrafted geometric
+-   [x] **Task:** Use `dlib` to extract 3--10 handcrafted geometric
     features, such as mouth width and eye opening.
 -   **Owner:** HENRIQUE COUTO **Due:** 16/10/2026
     **Estimate:** 30 min
@@ -182,13 +182,13 @@ Standard 68-point predictor was used
 
 ### T12 · Build and train the fuzzy classifier
 
--   [ ] **Task:** Scaffold and train a fuzzy classifier using `pyFUME`.
+-   [x] **Task:** Scaffold and train a fuzzy classifier using `pyFUME`.
 -   **Owner:** HENRIQUE COUTO **Due:** 18/10/2026
     **Estimate:** 30 min
 -   **Done when:** Human-understandable rules are generated and
     evaluated on KDEF.
 -   **Evidence / notes:**
-all documented in the notebook
+all documented directly in the notebook - `notebooks/phase5_fuzzy_kdef.ipynb`
 
 ------------------------------------------------------------------------
 
