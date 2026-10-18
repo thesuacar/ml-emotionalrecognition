@@ -1,0 +1,56 @@
+% Formatting and author-facing placeholders, included by main.tex.
+\usepackage[a4paper,margin=20mm,top=18mm,bottom=19mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage[backend=biber,style=apa,sorting=nyt]{biblatex}
+
+\definecolor{accent}{HTML}{173A58}
+\definecolor{placeholder}{HTML}{65727C}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent,citecolor=accent,pdftitle={Assignment 2: Detecting Emotions with ML Algorithms}}
+\setlist[itemize]{topsep=2pt,itemsep=0pt,leftmargin=1.35em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\setcounter{secnumdepth}{2}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Assignment 2 · Emotion recognition}
+\fancyhead[R]{\small FER2013 / KDEF}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlength{\headheight}{13pt}
+
+% Visible, non-fabricated prompts; delete/replace when completing the paper.
+\newcommand{\fillme}[1]{{\color{placeholder}\emph{[Replace: #1]}}}
+\newcommand{\metricmissing}{\textemdash}
+\newcommand{\figureplaceholder}[2]{%
+  \begin{center}
+  \IfFileExists{figures/#1}{%
+    \includegraphics[width=0.85\linewidth,height=3.0cm,keepaspectratio]{figures/#1}%
+  }{%
+    \fbox{\parbox[c][0.65cm][c]{0.81\linewidth}{\centering\footnotesize\color{placeholder}#2\\\texttt{\detokenize{figures/#1}}}}%
+  }
+  \end{center}
+}
+\newcommand{\matrixslot}[2]{%
+  \begin{minipage}[t]{0.485\linewidth}
+    \raggedright\footnotesize\textbf{#1}\\[-2pt]
+    \IfFileExists{figures/#2}{%
+      \includegraphics[width=\linewidth,height=2.8cm,keepaspectratio]{figures/#2}%
+    }{%
+      \fbox{\parbox[c][0.55cm][c]{0.92\linewidth}{\centering\scriptsize\color{placeholder}\texttt{\detokenize{#2}}}}%
+    }
+  \end{minipage}%
+}

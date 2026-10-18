@@ -1,0 +1,21 @@
+\section{Task 1: FER2013 baseline (20\%)}
+\textbf{Models and features.} Compare Logistic Regression, SVM and Random Forest with HOG, facial landmarks and PCA features. Retain the supplied Random Forest + landmarks starter as a baseline. \fillme{Describe representation dimensions, scaling, PCA explained variance, model configurations and how tuning on PublicTest was controlled.}
+
+\begin{table}[h]
+\centering\small
+\caption{FER2013 PublicTest (validation) comparison. Fill all nine feature--model combinations; report selected model(s) separately on PrivateTest.}
+\label{tab:fer-val}
+\begin{tabular}{@{}llccc@{}}\toprule
+Features & Classifier & Accuracy & Bal. acc. & Macro-F1 \\\midrule
+HOG & Logistic Regression & -- & -- & -- \\
+HOG & SVM & -- & -- & -- \\
+HOG & Random Forest & -- & -- & -- \\
+Landmarks & Logistic Regression & -- & -- & -- \\
+Landmarks & SVM & -- & -- & -- \\
+Landmarks & Random Forest & -- & -- & -- \\
+PCA & Logistic Regression & -- & -- & -- \\
+PCA & SVM & -- & -- & -- \\
+PCA & Random Forest & -- & -- & -- \\
+\bottomrule\end{tabular}
+\end{table}
+\textbf{Selection and failure analysis.} \fillme{Identify the strongest classifier/features on validation, give final PrivateTest accuracy/balanced accuracy/macro-F1, reference appendix matrices; compare per-emotion recall, class imbalance, hard-to-classify/mislabeled/lighting-varied samples.}

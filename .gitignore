@@ -1,4 +1,32 @@
+
+# ==========================================
+# Machine Learning - Data and Outputs
+# ==========================================
 data/
 models/
 figures/
 outputs/
+
+# Allow LaTeX report figures to be tracked
+!docs/report/main/figures/
+
+# ==========================================
+# LaTeX - Temporary Build Files
+# ==========================================
+.build/
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+
+# ==========================================
+# macOS
+# ==========================================
+.DS_Store

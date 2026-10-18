@@ -1,0 +1,14 @@
+\section{Task 2: KDEF dataset study (15\%)}
+Use the best FER2013 feature representation and retrain the corresponding classifiers on preprocessed frontal KDEF images. Partition subjects 80/20 so each subject appears in exactly one split; document counts and random seed. \fillme{Explain KDEF model selection without test-set leakage.}
+
+\begin{table}[h]\centering\small
+\caption{KDEF held-out subject test set, with FER-selected feature representation.}
+\label{tab:kdef}
+\begin{tabular}{@{}lccc@{}}\toprule
+Classifier & Accuracy & Bal. acc. & Macro-F1 \\\midrule
+Logistic Regression & -- & -- & -- \\
+SVM & -- & -- & -- \\
+Random Forest & -- & -- & -- \\
+\bottomrule\end{tabular}
+\end{table}
+\fillme{Explain why controlled KDEF imagery differs from in-the-wild FER2013, whether model ranking changes, the easiest/hardest emotions, and which emotions might transfer well. Cite KDEF confusion matrices in Appendix A.}

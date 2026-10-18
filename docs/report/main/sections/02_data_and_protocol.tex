@@ -1,0 +1,8 @@
+\section{Datasets, preprocessing and experimental protocol}
+\textbf{FER2013.} Images are grayscale, $48\times48$, with seven labels: angry, disgust, fear, happy, sad, surprise and neutral. Use the provided Training split to fit models, PublicTest for model selection/tuning, and untouched PrivateTest \emph{only} for final evaluation.
+
+\textbf{KDEF.} Use only straight/frontal (S) faces, across seven comparable expressions (KDEF ``Afraid'' maps to FER ``fear''). Divide by identity: 80\% of subjects for training, 20\% for testing, with no subject overlap.
+
+\textbf{Common representation.} Detect and crop KDEF faces with a margin preserving forehead and jaw; convert to grayscale, resize to $48\times48$ and apply the same normalization as FER. Apply identical feature extraction at training and inference. Fit any scaling, PCA or learned transformation only on training data.
+
+\fillme{Document dataset counts/class distributions; detected-face failures, deduplication/quality checks, exact train/validation/test protocol, seeds, tools, versions and potential limitations. Provide one dataset example if it supports a claim.}

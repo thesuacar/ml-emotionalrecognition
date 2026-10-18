@@ -1,0 +1,63 @@
+\documentclass[a4paper,10pt]{article}
+\input{formatting.tex}
+
+% The project Makefile builds from main/ and copies the PDF to
+% ../Assignment_2_Detecting_Emotions_with_ML_Algorithms.pdf.
+% APA bibliography: manually export main/references.bib from Zotero.
+\IfFileExists{references.bib}{\addbibresource{references.bib}}{}
+
+\title{
+    \vspace{-1.0cm}
+    \textbf{Assignment 2: Detecting Emotions with ML Algorithms}\\[3pt]
+    \large Cross-Dataset Generalization of Facial Expressions
+}
+
+\author{
+    Su Acar (2475901)\\[3pt]
+    Vikram Chandrasekaran (2542544)\\[3pt]
+    Henrique DaSilva Couto (2463334)
+}
+
+\date{
+    5ARE0 -- Data Analysis \& Learning Methods\\
+    Assignment 2 -- Group 5\\
+    \today
+}
+
+\begin{document}
+\maketitle
+\vspace{-1.0em}
+
+Example citations for later on (remove this later):
+% FER2013
+\parencite{goodfellow_challenges}
+
+% KDEF
+\parencite{goeleven_karolinska}
+
+% Both datasets
+\parencite{goodfellow_challenges,goeleven_karolinska}
+
+
+\input{sections/01_introduction.tex}
+\input{sections/02_data_and_protocol.tex}
+\input{sections/03_fer2013_baseline.tex}
+\input{sections/04_kdef_study.tex}
+\input{sections/05_cross_dataset_generalization.tex}
+\input{sections/06_explainable_fuzzy_classifier.tex}
+\input{sections/07_creative_challenge.tex}
+\input{sections/08_realtime_demo.tex}
+\input{sections/09_discussion_conclusion.tex}
+\input{sections/10_ai_usage_statement.tex}
+
+% This is deliberately conditional: create references.bib MANUALLY via Zotero.
+\IfFileExists{references.bib}{%
+  \printbibliography[title={References}]
+}{%
+  \section*{References}
+  \fillme{Export main/references.bib manually via Zotero; insert actual APA citations.}
+}
+
+\appendix
+\input{sections/A_confusion_matrices.tex}
+\end{document}

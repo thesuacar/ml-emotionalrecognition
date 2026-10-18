@@ -1,0 +1,15 @@
+\section{Confusion matrices for reported models}
+\noindent\fillme{Replace every relevant slot with an actual confusion matrix exported by the corresponding notebook. Remove unreported model configurations; include matrices for all reported final models, with evaluation split, class ordering, count or normalization labeled.}
+
+\subsection{FER2013 baseline models (PublicTest; final chosen model on PrivateTest)}
+\matrixslot{HOG + Logistic Regression}{cm_fer_hog_logreg.pdf}\hfill\matrixslot{HOG + SVM}{cm_fer_hog_svm.pdf}\\[4pt]
+\matrixslot{HOG + Random Forest}{cm_fer_hog_rf.pdf}\hfill\matrixslot{Landmarks + Logistic Regression}{cm_fer_lm_logreg.pdf}\\[4pt]
+\matrixslot{Landmarks + SVM}{cm_fer_lm_svm.pdf}\hfill\matrixslot{Landmarks + Random Forest}{cm_fer_lm_rf.pdf}\\[4pt]
+\matrixslot{PCA + Logistic Regression}{cm_fer_pca_logreg.pdf}\hfill\matrixslot{PCA + SVM}{cm_fer_pca_svm.pdf}\\[4pt]
+\matrixslot{PCA + Random Forest}{cm_fer_pca_rf.pdf}\hfill\matrixslot{FER final selected (PrivateTest)}{cm_fer_final_private.pdf}
+
+\subsection{KDEF, cross-dataset, fuzzy and creative models}
+\matrixslot{KDEF Logistic Regression}{cm_kdef_logreg.pdf}\hfill\matrixslot{KDEF SVM}{cm_kdef_svm.pdf}\\[4pt]
+\matrixslot{KDEF Random Forest}{cm_kdef_rf.pdf}\hfill\matrixslot{FER $\rightarrow$ KDEF}{cm_fer_to_kdef.pdf}\\[4pt]
+\matrixslot{KDEF $\rightarrow$ FER}{cm_kdef_to_fer.pdf}\hfill\matrixslot{Fuzzy KDEF}{cm_fuzzy_kdef.pdf}\\[4pt]
+\matrixslot{Creative variant(s)}{cm_creative_final.pdf}\hfill\matrixslot{Additional reported model}{cm_additional.pdf}

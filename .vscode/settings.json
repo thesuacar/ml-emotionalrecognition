@@ -1,0 +1,26 @@
+
+{
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.recipe.default": "first",
+  "latex-workshop.latex.build.forceRecipeUsage": true,
+
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "Build Assignment Report",
+      "tools": ["report-make"]
+    }
+  ],
+
+  "latex-workshop.latex.tools": [
+    {
+      "name": "report-make",
+      "command": "make",
+      "args": [
+        "-C",
+        "%DIR%/.."
+      ]
+    }
+  ],
+
+  "latex-workshop.view.pdf.viewer": "tab"
+}
