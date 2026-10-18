@@ -175,10 +175,14 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
     **Estimate:** 30 min
 -   **Done when:** A DataFrame of geometric features is generated for
     KDEF.
--   **Evidence / notes:**
 
-Standard 68-point predictor was used 
-	source: `https://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2`
+- **Evidence / notes:**
+  - Implemented in `notebooks/phase5_fuzzy_kdef.ipynb`.
+  - Used dlib's 68-landmark predictor and seven normalized facial features.
+  - Processed 980 frontal KDEF images with zero extraction failures.
+  - Preserved the 56/14 subject-independent train/test split.
+  - Exported geometric features to `data/fuzzy/kdef_geometric_features.csv`.
+  - Added local CSV caching to avoid repeated landmark extraction.
 
 ### T12 · Build and train the fuzzy classifier
 
@@ -187,8 +191,21 @@ Standard 68-point predictor was used
     **Estimate:** 30 min
 -   **Done when:** Human-understandable rules are generated and
     evaluated on KDEF.
--   **Evidence / notes:**
-all documented directly in the notebook - `notebooks/phase5_fuzzy_kdef.ipynb`
+
+
+- **Evidence / notes:**
+  - Implemented seven one-versus-rest Takagi-Sugeno models using PyFUME.
+  - Compared 2 and 3 clusters using subject-independent validation.
+  - Selected 3 clusters: validation accuracy 73.21%, macro-F1 0.7087.
+  - Final KDEF test: accuracy 63.27%, balanced accuracy 63.27%,
+    macro-F1 0.6082 (196 images from unseen subjects).
+  - Extracted and interpreted 21 fuzzy rules.
+  - Saved the model bundle at `models/fuzzy/fuzzy_classifier.pkl`.
+  - Verified model serialization and restoration.
+  - Added disk caching for faster repeated notebook execution.
+  - Notebook: `notebooks/phase5_fuzzy_kdef.ipynb`.
+
+
 
 ------------------------------------------------------------------------
 
@@ -269,15 +286,23 @@ all documented directly in the notebook - `notebooks/phase5_fuzzy_kdef.ipynb`
 
 ### T19 · Write report: cross-dataset and fuzzy classifier
 
--   [ ] **Task:** Draft Task 3 (Cross-Dataset) and Task 4 (Fuzzy)
+-   [ ] **Task:** Draft Task 3 (Cross-Dataset)
+	- **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   [x] Task 4 (Fuzzy) - HC done in 2026-10-18
+	-  **Owner:** HENRIQUE **Due:** 2026-10-18
     sections.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 30 min
 -   **Done when:** Domain shift is explained, and fuzzy rules are
     documented and justified.
--   **Evidence / notes:**
-    \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
+- **Evidence / notes:**
+  - [x] Henrique: drafted Task 4 fuzzy classifier report section.
+  - [x] Henrique: added final KDEF fuzzy confusion matrix to appendix.
+  - [ ] Integrate Task 3 cross-dataset findings from the team.
+  - [ ] Review and finalize both sections against the report rubric.
+  - Task 4 source: `notebooks/phase5_fuzzy_kdef.ipynb`.
+  - Report source: `report/main/sections/06_explainable_fuzzy_classifier.tex`.
+  
 ### T20 · Write report: creative challenge and demo
 
 -   [ ] **Task:** Draft Task 5 (Creative) and Task 6 (Demo) sections.
@@ -296,7 +321,7 @@ all documented directly in the notebook - `notebooks/phase5_fuzzy_kdef.ipynb`
 -   **Done when:** All matrices are included without excessive
     explanatory text.
 -   **Evidence / notes:**
-    \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+	- **HC**: Fuzzy KDEF confusion matrix completed; remaining models pending team integration
 
 ### T22 · Finalize AI statement and report formatting
 
