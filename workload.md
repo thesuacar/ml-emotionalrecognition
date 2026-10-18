@@ -183,12 +183,12 @@ Standard 68-point predictor was used
 ### T12 · Build and train the fuzzy classifier
 
 -   [ ] **Task:** Scaffold and train a fuzzy classifier using `pyFUME`.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** HENRIQUE COUTO **Due:** 18/10/2026
     **Estimate:** 30 min
 -   **Done when:** Human-understandable rules are generated and
     evaluated on KDEF.
 -   **Evidence / notes:**
-    \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+all documented in the notebook
 
 ------------------------------------------------------------------------
 
