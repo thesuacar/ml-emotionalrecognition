@@ -11,5 +11,39 @@
 \subsection{KDEF, cross-dataset, fuzzy and creative models}
 \matrixslot{KDEF Logistic Regression}{cm_kdef_logreg.pdf}\hfill\matrixslot{KDEF SVM}{cm_kdef_svm.pdf}\\[4pt]
 \matrixslot{KDEF Random Forest}{cm_kdef_rf.pdf}\hfill\matrixslot{FER $\rightarrow$ KDEF}{cm_fer_to_kdef.pdf}\\[4pt]
-\matrixslot{KDEF $\rightarrow$ FER}{cm_kdef_to_fer.pdf}\hfill\matrixslot{Fuzzy KDEF}{cm_fuzzy_kdef.pdf}\\[4pt]
+\matrixslot{KDEF $\rightarrow$ FER}{cm_kdef_to_fer.pdf}\\[4pt]
 \matrixslot{Creative variant(s)}{cm_creative_final.pdf}\hfill\matrixslot{Additional reported model}{cm_additional.pdf}
+
+
+
+
+\subsection{Fuzzy classifier: held-out KDEF subjects}
+
+\begin{table}[htbp]
+\centering
+\caption{Final fuzzy classifier confusion matrix
+(counts; 196 test images from 14 unseen subjects).
+Rows are true labels and columns are predictions.}
+\label{tab:fuzzy-confusion}
+\small
+\begin{tabular}{lrrrrrrr}
+\toprule
+True / Pred. & Af & An & Di & Ha & Ne & Sa & Su \\
+\midrule
+Afraid   & 7 & 1 & 2 & 0 & 2 & 2 & 14 \\
+Angry    & 0 & 14 & 10 & 0 & 2 & 2 & 0 \\
+Disgust  & 0 & 3 & 23 & 1 & 0 & 1 & 0 \\
+Happy    & 0 & 0 & 0 & 28 & 0 & 0 & 0 \\
+Neutral  & 0 & 3 & 0 & 0 & 18 & 6 & 1 \\
+Sad      & 0 & 6 & 2 & 0 & 12 & 8 & 0 \\
+Surprise & 0 & 0 & 0 & 0 & 1 & 1 & 26 \\
+\bottomrule
+\end{tabular}
+
+\smallskip
+{\footnotesize
+Af: afraid; An: angry; Di: disgust; Ha: happy;
+Ne: neutral; Sa: sad; Su: surprise.
+}
+\end{table}
+

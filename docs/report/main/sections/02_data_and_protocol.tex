@@ -5,4 +5,13 @@
 
 \textbf{Common representation.} Detect and crop KDEF faces with a margin preserving forehead and jaw; convert to grayscale, resize to $48\times48$ and apply the same normalization as FER. Apply identical feature extraction at training and inference. Fit any scaling, PCA or learned transformation only on training data.
 
+\textbf{Fuzzy classifier protocol.}
+For Task 4, geometric features were extracted directly from
+original-resolution frontal KDEF images, rather than the
+FER-compatible $48\times48$ images. Both acquisition sessions
+for each identity remained in the same partition. Model
+selection used training subjects only, preserving the
+held-out KDEF subjects for final evaluation.
+
+
 \fillme{Document dataset counts/class distributions; detected-face failures, deduplication/quality checks, exact train/validation/test protocol, seeds, tools, versions and potential limitations. Provide one dataset example if it supports a claim.}

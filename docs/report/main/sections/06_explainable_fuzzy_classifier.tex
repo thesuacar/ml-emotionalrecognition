@@ -1,6 +1,81 @@
+
 \section{Task 4: Explainable fuzzy classifier (10\%)}
-Build an interpretable fuzzy system using KDEF frontal images and \textbf{3--10 handcrafted geometric facial features}, for example normalized mouth opening, mouth width, eye opening, eyebrow height and smile ratio. Landmarks may be obtained using OpenCV or dlib.
+\label{sec:fuzzy}
 
-\fillme{Name each measured feature and normalization; specify fuzzy memberships (e.g., low/medium/high), rule base, inference/defuzzification and handling of missing landmarks. Include 1--2 representative readable IF--THEN rules and how they were chosen.}
+\textbf{Features and protocol.}
+We extracted seven geometric features from the 68 dlib facial
+landmarks: mouth width, mouth opening, left and right eye opening,
+eyebrow height, mouth width-to-height ratio (\emph{smile ratio}),
+and mouth-corner asymmetry. Most distances were normalized by face
+width, while eye opening was normalized by eye width. All 980
+frontal KDEF images were processed successfully, without landmark
+detection failures.
 
-\fillme{Report accuracy, balanced accuracy, macro-F1 and an appendix confusion matrix on held-out KDEF subjects; compare with conventional classifiers. Explain whether the learned/designed rules match plausible expression patterns and provide counterexamples.}
+The predefined subject-independent split contained 56 training
+subjects (784 images) and 14 held-out test subjects (196 images).
+Within the training partition, 44 subjects (616 images) were used
+for fitting and 12 (168 images) for validation. MinMax scaling
+was fitted only on the corresponding training partition.
+
+\textbf{Fuzzy model.}
+We trained seven one-versus-rest Takagi--Sugeno fuzzy models with
+PyFUME, one for each emotion. Each model uses Gaussian membership
+functions in its rule antecedents and a learned linear consequent.
+The numerical outputs are combined through fuzzy inference, and
+the emotion with the highest output score is selected. These
+scores are not calibrated probabilities.
+
+We compared two and three clusters per emotion using macro-F1
+on validation subjects. The three-cluster configuration was
+selected before testing and subsequently refitted on all 784
+training images.
+
+\begin{table}[htbp]
+\centering
+\caption{Subject-independent KDEF fuzzy classification results.}
+\label{tab:fuzzy-results}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Split & Clusters & Images & Acc. (\%) & Bal. acc. (\%) & Macro-F1 \\
+\midrule
+Validation & 2 & 168 & 71.43 & 71.43 & 0.6881 \\
+Validation & 3 & 168 & 73.21 & 73.21 & 0.7087 \\
+Final test & 3 & 196 & 63.27 & 63.27 & 0.6082 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Rule interpretation.}
+The final system contains 21 fuzzy rules, three per emotion.
+A representative rule from the happiness model is:
+
+\begin{quote}
+\small
+\emph{Happy, Rule 1 (abridged):}
+IF mouth width belongs to cluster 1 (Gaussian centre 0.762)
+AND mouth opening belongs to cluster 1 (centre 0.204),
+together with the remaining geometric conditions,
+THEN calculate the happiness score using the fitted linear
+consequent.
+\end{quote}
+
+This rule dominated 94.6\% of happy training images but only
+2.2\% of other images. Its relatively wide-mouth configuration
+is consistent with smiling. The strongest rules for fear and
+sadness showed weaker separation, and overlapping membership
+functions limit their linguistic interpretation.
+
+\textbf{Evaluation and limitations.}
+On unseen subjects, happiness (28/28), surprise (26/28) and
+disgust (23/28) achieved the highest recall. Fear (7/28) and
+sadness (8/28) were more difficult: 14 fearful faces were
+classified as surprise, and 12 sad faces as neutral.
+The roughly ten-percentage-point accuracy decrease from
+validation to testing indicates limited generalization across
+individuals. Although the fuzzy antecedents are inspectable,
+the linear consequents and interactions between the seven
+models complicate explanations of individual predictions.
+
+% Add a numerical comparison with the Task 2 KDEF baseline
+% when the team's corresponding results are available.
