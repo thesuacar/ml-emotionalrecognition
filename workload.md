@@ -131,7 +131,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 -   [ ] **Task:** Use the best-performing features identified in T07 on
     KDEF images.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** VC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 15 min
 -   **Done when:** KDEF images are processed into the same feature space
     as FER2013.
@@ -142,7 +142,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 -   [ ] **Task:** Retrain the best-performing classifiers on KDEF using
     an 80/20 subject split.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** VC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 25 min
 -   **Done when:** Subject-independent models are trained and evaluated,
     and metrics are generated.
@@ -156,7 +156,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 ### T10 · Test KDEF-trained model on FER2013
 
 -   [ ] **Task:** Evaluate the KDEF-trained model on FER2013.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** VC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 20 min
 -   **Done when:** Domain-shift performance is evaluated and metrics
     plus confusion matrices are recorded.
@@ -215,7 +215,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 -   [ ] **Task:** Implement one creative improvement, for example data
     augmentation or SMOTE.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** Su **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 25 min
 -   **Done when:** The training pipeline uses a technique intended to
     handle data imbalance or variety.
@@ -226,7 +226,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 -   [ ] **Task:** Implement a second creative improvement, for example
     hyperparameter tuning or KDEF insights.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** Su **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 30 min
 -   **Done when:** The best pipeline is optimized and a performance
     improvement is verified on FER2013.
@@ -237,7 +237,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 -   [ ] **Task:** Finalize the best model and save the production `.pkl`
     file.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** Su **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 15 min
 -   **Done when:** The final model is evaluated on the private test
     split and the `.pkl` is saved to the repository.
@@ -252,18 +252,18 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 -   [ ] **Task:** Adapt `baseline_demo_fer2013.py` to use the new best
     model.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** HC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 20 min
 -   **Done when:** The script loads the new `.pkl` and handles real-time
     webcam frame extraction.
 -   **Evidence / notes:**
-    \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+  	- use existing python script to access camera
 
 ### T17 · Test the webcam demo
 
 -   [ ] **Task:** Test the webcam demo locally and log performance
     issues.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** HC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 15 min
 -   **Done when:** The script runs without crashing, and success/failure
     cases are noted for the report.
@@ -277,7 +277,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 ### T18 · Write report: baseline and KDEF
 
 -   [ ] **Task:** Draft Task 1 (Baseline) and Task 2 (KDEF) sections.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** HC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 30 min
 -   **Done when:** Feature/classifier ranking, difficult emotions, and
     dataset differences are described.
@@ -287,7 +287,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 ### T19 · Write report: cross-dataset and fuzzy classifier
 
 -   [ ] **Task:** Draft Task 3 (Cross-Dataset)
-	- **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+	- **Owner:** HC / VC **Due:** \_\_\_\_\_\_\_\_\_\_
 -   [x] Task 4 (Fuzzy) - HC done in 2026-10-18
 	-  **Owner:** HENRIQUE **Due:** 2026-10-18
     sections.
@@ -306,7 +306,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 ### T20 · Write report: creative challenge and demo
 
 -   [ ] **Task:** Draft Task 5 (Creative) and Task 6 (Demo) sections.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** HC / Su **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 30 min
 -   **Done when:** Creative choices are justified and webcam adaptation
     issues are described.
@@ -316,7 +316,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 ### T21 · Assemble confusion-matrix appendix
 
 -   [ ] **Task:** Add all confusion matrices to the report appendix.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** HC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 15 min
 -   **Done when:** All matrices are included without excessive
     explanatory text.
@@ -327,17 +327,17 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 -   [ ] **Task:** Draft the AI usage statement and format the final
     report.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** HC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 20 min
 -   **Done when:** The official AI statement is completed and the PDF is
     no more than 8 pages.
 -   **Evidence / notes:**
-    \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+	-   all send their used AI models
 
 ### T23 · Package the final ZIP
 
 -   [ ] **Task:** Package the final deliverables into a ZIP.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** all together / HC to run all stuff and get ZIP locally **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 10 min
 -   **Done when:** The ZIP contains the 8-page PDF, notebooks, `.pkl`
     models, and `demo.py`.
