@@ -169,24 +169,26 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 ### T11 · Extract geometric features
 
--   [ ] **Task:** Use `dlib` to extract 3--10 handcrafted geometric
+-   [x] **Task:** Use `dlib` to extract 3--10 handcrafted geometric
     features, such as mouth width and eye opening.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   **Owner:** HENRIQUE COUTO **Due:** 16/10/2026
     **Estimate:** 30 min
 -   **Done when:** A DataFrame of geometric features is generated for
     KDEF.
 -   **Evidence / notes:**
-    \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
+Standard 68-point predictor was used 
+	source: `https://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2`
 
 ### T12 · Build and train the fuzzy classifier
 
--   [ ] **Task:** Scaffold and train a fuzzy classifier using `pyFUME`.
--   **Owner:** \_\_\_\_\_\_\_\_\_\_ **Due:** \_\_\_\_\_\_\_\_\_\_
+-   [x] **Task:** Scaffold and train a fuzzy classifier using `pyFUME`.
+-   **Owner:** HENRIQUE COUTO **Due:** 18/10/2026
     **Estimate:** 30 min
 -   **Done when:** Human-understandable rules are generated and
     evaluated on KDEF.
 -   **Evidence / notes:**
-    \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+all documented directly in the notebook - `notebooks/phase5_fuzzy_kdef.ipynb`
 
 ------------------------------------------------------------------------
 
