@@ -1,3 +1,11 @@
+#environment requirements for running TASK 4 - Fuzzy systems
+
+#to initialize the environment, run the following command in your terminal:
+  #conda env create -f environments/environment-fuzzy.yml
+
+#to activate the environment, run:
+  #conda activate emotion_fuzzy
+
 name: emotion_fuzzy
 channels:
   - conda-forge

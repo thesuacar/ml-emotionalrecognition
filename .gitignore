@@ -7,6 +7,15 @@ models/
 figures/
 outputs/
 
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+
+# Jupyter temporary files
+.ipynb_checkpoints/
+
+
 # Allow LaTeX report figures to be tracked
 !docs/report/main/figures/
 
