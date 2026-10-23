@@ -1,10 +1,12 @@
 import cv2
 import numpy as np
+from pathlib import Path
 
-# OpenCV face detector
-face_detector = cv2.CascadeClassifier(
-    "models/faceAndLandmarkModels/haarcascade_frontalface_default.xml"
-)
+CASCADE_PATH = Path(cv2.data.haarcascades) / "haarcascade_frontalface_default.xml"
+face_detector = cv2.CascadeClassifier(str(CASCADE_PATH))
+
+if face_detector.empty():
+    raise RuntimeError(f"Could not load Haar cascade from {CASCADE_PATH}")
 
 def preprocess_kdef_image(
     image_path,
