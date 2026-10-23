@@ -8,6 +8,8 @@ Expected paths from the repository root:
 - `data/fer/fer2013.csv`
 - `data/kdef/KDEF/`
 
+Ensure that only KDEF/ is used for training, and move its folder to expected path.
+
 KDEF contains 4,900 photographs. Its original subject
 and acquisition folder structure must be preserved.
 
