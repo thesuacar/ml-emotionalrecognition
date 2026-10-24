@@ -14,9 +14,10 @@ EMOTIONS = ["Angry", "Disgust", "Fear", "Happy", "Sad", "Surprise", "Neutral"]  
 
 HOG_PARAMS = dict(orientations=9, pixels_per_cell=(8, 8), cells_per_block=(2, 2))
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
-LANDMARK_MODEL = os.path.join(_HERE, "models", "faceAndLandmarkModels",
-                              "shape_predictor_68_face_landmarks_GTX.dat")
+# Repository root (this file lives in scripts/), so the model path works from any working folder.
+_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+LANDMARK_MODEL = os.path.join(_ROOT, "models", "faceAndLandmarkModels",
+                              "shape_predictor_68_face_landmarks.dat")
 
 
 def extract_hog(images):

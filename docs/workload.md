@@ -250,7 +250,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 ### T16 · Adapt the demo script
 
--   [ ] **Task:** Adapt `baseline_demo_fer2013.py` to use the new best
+-   [ ] **Task:** Adapt `scripts/baseline_demo_fer2013.py` to use the new best
     model.
 -   **Owner:** HC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 20 min
