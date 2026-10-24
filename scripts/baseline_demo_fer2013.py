@@ -1,91 +1,72 @@
+"""Webcam emotion recognition demo.
+
+Run from the command line:   python scripts/baseline_demo_fer2013.py      (press q to quit)
+"""
+import os
+import sys
 import cv2
 import numpy as np
-from skimage.feature import hog
-import joblib  # for loading the trained SVM model
-import dlib 
+import joblib
 
-# Load your trained SVM model
-model = joblib.load("./models/rf_fer_model_landmarks.pkl")
+# This script lives in scripts/, so the repository root is one folder up. Make it importable.
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
+from scripts.fer_features import extract_hog, EMOTIONS      # the SAME feature code that was used for training
 
-# Importing dlib's landmark detector
-# Dlib landmarks from: 
-#   https://github.com/davisking/dlib-models/blob/master/shape_predictor_68_face_landmarks.dat.bz2
-landmDet = dlib.shape_predictor("./faceAndLandmarkModels/shape_predictor_68_face_landmarks_GTX.dat")
-#faceDetector = dlib.get_frontal_face_fetector()
-
-def extractLandmarksFER(img):
-    face_rects = dlib.rectangle(left=0, top=0, right=47, bottom=47)
-    la = landmDet(img.astype(np.uint8), face_rects)
-    x1 = face_rects.left() 
-    y1 = face_rects.top() 
-    x2 = face_rects.right() 
-    y2 = face_rects.bottom()
-
-    la2 = np.asarray( np.matrix([
-        [
-            (p.x-0.5*(x2-x1))/(x2-x1), (p.y-0.5*(y2-y1))/(y2-y1)
-        ] for p in la.parts()])).astype(np.float32)
-    la2 -= np.mean(la2, axis=0, keepdims=True)
-    la2 /= np.max(np.abs(la2), axis=0, keepdims=True)
-    
-    return(la2.flatten())
+# ---------- settings: change these two lines if you want to use another model ----------
+MODEL_FILE = "models/fer_hog_svm.pkl"
+FEATURE_FUNCTION = extract_hog        # must be the same features the model was trained on
+#   other options: extract_landmarks, extract_hog_landmarks (import them from fer_features)
+# ----------------------------------------------------------------------------------------
 
 
-# Emotion labels (adjust if needed)
-emotion_labels = [
-    'Angry',
-    'Disgust',
-    'Fear',
-    'Happy',
-    'Sad',
-    'Surprise',
-    'Neutral']
+# Load the trained model (a scikit-learn pipeline: scaler + classifier)
+model = joblib.load(os.path.join(ROOT, MODEL_FILE))
 
-# Initialize webcam
+# Haar cascade = OpenCV's face detector. Use our own copy if we have it, otherwise the one that comes with OpenCV.
+own_cascade = os.path.join(ROOT, "models", "faceAndLandmarkModels", "haarcascade_frontalface_default.xml")
+if os.path.exists(own_cascade):
+    cascade_path = own_cascade
+else:
+    cascade_path = cv2.data.haarcascades + "haarcascade_frontalface_default.xml"
+face_cascade = cv2.CascadeClassifier(cascade_path)
+
+# Start the webcam
 cap = cv2.VideoCapture(0)
-
-# The students have to download the file haarcascade_frontalface_default.xml
-# from Open CV. This is needed for the Haar cascade, which detects faces. This is a function built
-# in Open CV (CascadeClassifier). However, it needs the XML file as input.
-face_cascade = cv2.CascadeClassifier('faceAndLandmarkModels/haarcascade_frontalface_default.xml')
+if not cap.isOpened():
+    raise RuntimeError("Could not open the webcam")
 
 while True:
     ret, frame = cap.read()
     if not ret:
         break
 
-    # Convert to grayscale
+    # Convert to grayscale (FER images are grayscale)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     # Detect faces
-    faces = face_cascade.detectMultiScale(
-        gray, scaleFactor=1.3, minNeighbors=5)
+    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.3, minNeighbors=5)
 
-    # The captured faces are resized to 48x48
-    #  and HOG features are captured on top.
-    # Finally, the classifier is evaluated
     for (x, y, w, h) in faces:
-        # Extract face ROI
-        face = gray[y:y+h, x:x+w]
-        face_resized = cv2.resize(face, (48, 48))
+        # Cut out the face and resize it to 48x48, like the FER images
+        face = gray[y:y + h, x:x + w]
+        face_resized = cv2.resize(face, (48, 48), interpolation=cv2.INTER_AREA)
 
-        # Extract features
-        features = extractLandmarksFER(face_resized)
-        features = features.reshape(1, -1)
+        # Compute the features. The function expects a stack of images, so we add one extra dimension.
+        features = FEATURE_FUNCTION(face_resized[np.newaxis])
 
-        # Predict emotion
-        prediction = model.predict(features)
-        label = emotion_labels[int(prediction)]
+        # Predict the emotion
+        prediction = model.predict(features)[0]
+        label = EMOTIONS[int(prediction)]
 
-        # Display label
-        cv2.putText(frame, label, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
+        # Draw the result
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
+        cv2.putText(frame, label, (x, max(20, y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
 
-    cv2.imshow('Emotion Recognition', frame)
+    cv2.imshow("Emotion Recognition", frame)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord("q"):
         break
 
 cap.release()
 cv2.destroyAllWindows()
-

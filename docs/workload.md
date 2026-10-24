@@ -41,7 +41,7 @@ three people - T01--T03 and T23: agree an owner together
 
 ------------------------------------------------------------------------
 
-## Phase 1 --- Environment and data
+## Environment and data
 
 ### T01 · Set up the Python environment
 
@@ -78,9 +78,9 @@ three people - T01--T03 and T23: agree an owner together
 
 ------------------------------------------------------------------------
 
-## Phase 2 --- Task 1: Baseline models
+## Task 1: Baseline models
 
-NOTES: Su did this phase altogether. The training, tuning, and testing takes a very long time. If possible, consider using the pushed pkl files for the rest of the assignment. Documentation for the report can be found at the end of baseline_fer2013_landmarks.ipynb. There are some result values that are useful for the reports
+NOTES: Su did this task altogether. The training, tuning, and testing takes a very long time. If possible, consider using the pushed pkl files for the rest of the assignment. Documentation for the report can be found at the end of baseline_fer2013_landmarks.ipynb. There are some result values that are useful for the reports
 
 ### T04 · Build HOG and PCA feature extraction
 
@@ -125,7 +125,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 ------------------------------------------------------------------------
 
-## Phase 3 --- Task 2: KDEF evaluation
+## Task 2: KDEF evaluation
 
 ### T08 · Extract the selected features on KDEF
 
@@ -151,7 +151,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 ------------------------------------------------------------------------
 
-## Phase 4 --- Task 3: Cross-dataset evaluation
+## Task 3: Cross-dataset evaluation
 
 ### T10 · Test KDEF-trained model on FER2013
 
@@ -165,7 +165,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 ------------------------------------------------------------------------
 
-## Phase 5 --- Task 4: Fuzzy classifier
+## Task 4: Fuzzy classifier
 
 ### T11 · Extract geometric features
 
@@ -177,7 +177,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
     KDEF.
 
 - **Evidence / notes:**
-  - Implemented in `notebooks/phase5_fuzzy_kdef.ipynb`.
+  - Implemented in `notebooks/04_task4_fuzzy_classifier.ipynb`.
   - Used dlib's 68-landmark predictor and seven normalized facial features.
   - Processed 980 frontal KDEF images with zero extraction failures.
   - Preserved the 56/14 subject-independent train/test split.
@@ -203,13 +203,13 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
   - Saved the model bundle at `models/fuzzy/fuzzy_classifier.pkl`.
   - Verified model serialization and restoration.
   - Added disk caching for faster repeated notebook execution.
-  - Notebook: `notebooks/phase5_fuzzy_kdef.ipynb`.
+  - Notebook: `notebooks/04_task4_fuzzy_classifier.ipynb`.
 
 
 
 ------------------------------------------------------------------------
 
-## Phase 6 --- Task 5: Creative performance challenge
+## Task 5: Creative performance challenge
 
 ### T13 · Implement creative feature 1
 
@@ -246,11 +246,11 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 ------------------------------------------------------------------------
 
-## Phase 7 --- Task 6: Webcam demo
+## Task 6: Webcam demo
 
 ### T16 · Adapt the demo script
 
--   [ ] **Task:** Adapt `baseline_demo_fer2013.py` to use the new best
+-   [ ] **Task:** Adapt `scripts/baseline_demo_fer2013.py` to use the new best
     model.
 -   **Owner:** HC **Due:** \_\_\_\_\_\_\_\_\_\_
     **Estimate:** 20 min
@@ -272,7 +272,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
 
 ------------------------------------------------------------------------
 
-## Phase 8 --- Report and final submission
+## Report and final submission
 
 ### T18 · Write report: baseline and KDEF
 
@@ -300,7 +300,7 @@ NOTES: Su did this phase altogether. The training, tuning, and testing takes a v
   - [x] Henrique: added final KDEF fuzzy confusion matrix to appendix.
   - [ ] Integrate Task 3 cross-dataset findings from the team.
   - [ ] Review and finalize both sections against the report rubric.
-  - Task 4 source: `notebooks/phase5_fuzzy_kdef.ipynb`.
+  - Task 4 source: `notebooks/04_task4_fuzzy_classifier.ipynb`.
   - Report source: `report/main/sections/06_explainable_fuzzy_classifier.tex`.
   
 ### T20 · Write report: creative challenge and demo
