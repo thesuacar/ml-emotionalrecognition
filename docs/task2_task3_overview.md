@@ -4,8 +4,8 @@ This page lists what the report has to answer for Task 2 (KDEF dataset study) an
 
 | Task | Notebook | Report section |
 |---|---|---|
-| Task 2: KDEF dataset study (15%) | `notebooks/02_kdef_dataset_study.ipynb` | `docs/report/main/sections/04_kdef_study.tex` |
-| Task 3: Cross-dataset generalization (20%) | `notebooks/03_cross_dataset_generalization.ipynb` | `docs/report/main/sections/05_cross_dataset_generalization.tex` |
+| Task 2: KDEF dataset study (15%) | `notebooks/02_task2_kdef_dataset_study.ipynb` | `docs/report/main/sections/04_kdef_study.tex` |
+| Task 3: Cross-dataset generalization (20%) | `notebooks/03_task3_cross_dataset_generalization.ipynb` | `docs/report/main/sections/05_cross_dataset_generalization.tex` |
 
 All numbers below come from the saved notebook outputs.
 
