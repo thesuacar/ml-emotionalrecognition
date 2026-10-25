@@ -1,0 +1,29 @@
+# Step 1 - If not present, download the large files from this link (DO NOT ADD THIS TO SUBMISSION!!!)
+
+https://drive.google.com/drive/folders/1pA_qRTZrKLNMeEkXn5AOGmgfrwnp2CAs?usp=sharing
+
+- You should unzip and place those into your root folder:
+```
+[ml-emotionalrecognition] $ tree data/ figures/ models/ outputs/ -L 2            
+data/
+├── fer/
+├── fuzzy/
+└── kdef
+│    ├── KDEF/
+│    └── kdef_preprocessed.pkl
+figures/
+models/
+├── faceAndLandmarkModels/
+├── fer_creative_best_settings.json
+├── fer_creative_best.pkl
+├── fer_hog_logreg.pkl
+├── fer_hog_svm.pkl
+├── fer_landmarks_rf.pkl
+├── fer_validation_hog_svm.pkl
+├── fuzzy/
+├── rf_fer_model_landmarks.pkl
+├── task2_kdef_best_model_configs.pkl
+└── task3_kdef_hog_svm.pkl
+outputs/
+└── fuzzy/
+```
