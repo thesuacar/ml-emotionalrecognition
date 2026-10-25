@@ -1,15 +1,42 @@
 \section{Task 3: Cross-dataset generalization (20\%)}
-Test both directions required by the assignment protocol: \textbf{FER$\rightarrow$KDEF} (FER-trained model applied to cropped/preprocessed frontal KDEF) and \textbf{KDEF$\rightarrow$FER} (retrain the KDEF-selected configuration on its training subjects, then evaluate on FER). Keep matching $48\times48$ grayscale normalization and class mapping throughout; do not adapt the test-domain examples using ground-truth labels. Keep FER PrivateTest untouched until final evaluation.
+\label{sec:task3}
+% Source: notebooks/03_task3_cross_dataset_generalization.ipynb (saved outputs).
 
-\begin{table}[h]\centering\small
-\caption{Within- and cross-dataset performance, on explicitly stated held-out sets.}
+\textbf{Adaptations.} The best Task 2 configuration (HOG features, power-transform scaler, RBF-SVM with $C = 10$ and $\gamma = 10^{-4}$) was retrained on all 980 frontal KDEF images after conversion to the FER format: face crop with a 20\% margin, grayscale, $48\times48$, scaled to $[0,1]$. FER images were only scaled to $[0,1]$. The same HOG extractor was used for both datasets, and the seven KDEF labels were mapped one-to-one onto the FER labels (``afraid'' to ``fear''). Nothing was fitted on FER, including the scaler. The FER$\rightarrow$KDEF direction in the protocol has not been run yet (see Table~\ref{tab:cross}).
+
+\begin{table}[h]
+\centering\small
+\caption{Within- and cross-dataset performance. The KDEF$\rightarrow$KDEF row is the Task 2 grouped cross-validation; the KDEF$\rightarrow$FER row covers all 35,887 FER2013 images, not only PrivateTest.}
 \label{tab:cross}
 \begin{tabular}{@{}lccc@{}}\toprule
 Train $\rightarrow$ evaluation & Accuracy & Bal. acc. & Macro-F1 \\\midrule
-FER $\rightarrow$ FER (PrivateTest) & -- & -- & -- \\
-KDEF $\rightarrow$ KDEF (test subjects) & -- & -- & -- \\
-FER $\rightarrow$ KDEF (test subjects) & -- & -- & -- \\
-KDEF $\rightarrow$ FER (PrivateTest) & -- & -- & -- \\
+FER $\rightarrow$ FER (SVM, PrivateTest) & 0.575 & 0.550 & 0.568 \\
+KDEF $\rightarrow$ KDEF (grouped CV) & 0.686 & 0.686 & 0.679 \\
+KDEF $\rightarrow$ FER (all FER2013) & 0.225 & 0.215 & 0.195 \\
+FER $\rightarrow$ KDEF & \fillme{not yet run} & & \\
 \bottomrule\end{tabular}
 \end{table}
-\fillme{List any model/input adaptations, define domain shift, quantify transfer degradation against in-domain comparisons, analyze per-emotion confusion, and explain which features transfer best and why. Note crop/alignment, resolution and grayscale/RGB as confounders.}
+
+\textbf{Domain shift.} Domain shift means that the training and test distributions differ, $P_{\text{KDEF}}(x,y)\neq P_{\text{FER}}(x,y)$. Three components are present. Covariate shift in $P(x)$: studio photographs with controlled lighting and framing, versus web-sourced images with varying lighting, pose, occlusion and crops. Label shift in $P(y)$: KDEF is balanced (14.3\% per emotion), while FER2013 has 25.0\% Happy and 1.5\% Disgust. Concept shift in $P(y\mid x)$: KDEF expressions are posed and exaggerated, whereas many FER2013 expressions are subtle and some labels are debatable (Section~\ref{sec:task1}).
+
+\textbf{Why performance degrades.} Accuracy falls from 0.602 on the KDEF test subjects (0.686 in cross-validation) to 0.225 on FER2013. Three observations explain part of the drop. First, the predicted class mix does not match FER2013: Neutral has a recall of 0.012 and Disgust a precision of 0.020. Second, the images differ in statistics: mean brightness is 0.507 in FER2013 against 0.327 in KDEF, and mean contrast (pixel standard deviation) is 0.212 against 0.161. A logistic regression on the HOG features identifies the source dataset with 98.8\% cross-validated accuracy, so the representation carries a strong dataset signature. Third, 980 studio images of 70 people cannot cover the variety of FER2013, and HOG compares fixed image regions, so differences in face position and scale change the features directly.
+
+\textbf{Which emotions transfer.} Table~\ref{tab:f1-transfer} compares the per-emotion F1 of the KDEF-trained model on KDEF (grouped cross-validation) and on FER2013. Happy and Surprise keep the most performance. Disgust and Neutral collapse, which is partly caused by their rarity in FER2013 (Table~\ref{tab:fer-counts}).
+
+\begin{table}[h]
+\centering\small
+\caption{Per-emotion F1 of the KDEF-trained SVM: in-domain (KDEF, grouped CV) and cross-domain (FER2013).}
+\label{tab:f1-transfer}
+\begin{tabular}{@{}lcc@{}}\toprule
+Emotion & F1 on KDEF & F1 on FER2013 \\\midrule
+Happy & 0.89 & 0.38 \\
+Surprise & 0.71 & 0.31 \\
+Sad & 0.50 & 0.24 \\
+Angry & 0.66 & 0.19 \\
+Fear & 0.46 & 0.18 \\
+Disgust & 0.69 & 0.04 \\
+Neutral & 0.66 & 0.02 \\
+\bottomrule\end{tabular}
+\end{table}
+
+\textbf{Which HOG features transfer.} For each HOG feature we correlated its average value across the seven emotions in KDEF with the same pattern in FER2013. The best transferring features (correlations 0.92 to 0.95) lie in the central part of the face grid. The worst (correlations $-0.75$ to $-0.88$) lie at the edges and corners of the grid, such as the top-right and bottom-right cells. Only HOG was evaluated across datasets, so we cannot say whether landmarks or PCA transfer better. The result is also based on a single random seed and a single KDEF pose.
