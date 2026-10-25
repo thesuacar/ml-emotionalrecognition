@@ -3,7 +3,7 @@ Our demo adapts the best selected model into a command-line executable Python fi
 
 We added a \textbf{README} file in the root folder of the submitted files explaining how to run the demo in the terminal. The same results can be obtained by running the notebook \texttt{notebooks/06\_task6\_webcam\_demo.ipynb}. 
 
-To improve throughput, we added an image crop feature to reduce the camera frame from \textbf{1080P} to a $640 \times 640$ detection unit on the centre of the screen. The same features and methods from the fuzzy classifier section were utilised for the demo.
+The seven features used in the live detection are identical to the ones reported in section \ref{sec:fuzzy}. Detection, however, was done differently, since training upsampled once on the original \textit{KDEF} photos. The demo uses no upsampling on the downscaled frame.
 
 We performed an empirical evaluation where the following protocol was followed:
 
@@ -14,4 +14,9 @@ We performed an empirical evaluation where the following protocol was followed:
     \item Compute the results
 \end{itemize}
 
-The final experiment data can be visualised in \ref{tab:task6_webcam_comparison}. The result summaries show that happy, sad, surprise, neutral, disgust and angry were detected in $>80\%$ of the cases. Fear, on the other hand, was extremely difficult to detect and it was confused mostly with neutral and sad.
+The final experiment data can be visualised in \ref{tab:task6_webcam_comparison} in appendix \ref{app:cm}. The experiment summaries show that happy, sad, surprise, neutral, disgust and angry were classified in $>80\%$ of the cases. Fear, on the other hand, was extremely difficult to trigger, and it was confused mostly with neutral and sad. Obviously, this experiment does not constitute a reliable evaluation metric for the live demo classifier. For that, it would be necessary to expose the model to data with emotions labelled properly.
+
+\textbf{Challenges and limitations:}
+To improve throughput, our code downscales the whole frame to 640 px in width (for detection only). Landmarks are then taken from the full-resolution frame. This modification substantially increased the processing fram rate from $1.17$ ($693.03 ms$) to $13.71$ processed FPS ($17.28 ms$ average detection), running on MacOS.
+
+In terms of luminosity, camera permissions and detection robustness, we did not experience any major issues, but mostly of the development for that section was done in MacOS. We foresee that other operating systems might add extra challenges during execution, which is a limitation the team could not address in this particular assignment.

@@ -18,8 +18,10 @@ for fitting and 12 (168 images) for validation. MinMax scaling
 was fitted only on the corresponding training partition.
 
 \textbf{Fuzzy model.}
-We trained seven one-versus-rest Takagi--Sugeno fuzzy models with
-PyFUME, one for each emotion. Each model uses Gaussian membership
+We trained seven one-versus-rest Takagi-Sugeno fuzzy models with
+PyFUME, one for each emotion. The standard settings were modified, which changes PyFUME's default rule simplification and holdout. The relevant parameters altered are: $setnes\_threshold=1.0$ , $merge\_threshold=1.0$ and $data\_split\_method$ $=$ $"no\_split"$. 
+
+Each model uses Gaussian membership
 functions in its rule antecedents and a learned linear consequent.
 The numerical outputs are combined through fuzzy inference, and
 the emotion with the highest output score is selected. These
