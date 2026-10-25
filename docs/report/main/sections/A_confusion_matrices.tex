@@ -1,44 +1,47 @@
 \section{Confusion matrices of the reported models}
 \label{app:cm}
+\FloatBarrier
 \subsection{FER2013 baseline models (PublicTest; tuned models on PrivateTest)}
 \label{app:cm-fer}
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../../../figures/task1_confusion_matrices_val}
 \caption{Confusion matrices of all nine FER2013 baseline models on the PublicTest (validation) split. Rows are true labels and columns are predictions; values are row-normalized.}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../../../figures/task1_confusion_test}
 \caption{Confusion matrices of the three selected FER2013 models on the PrivateTest split, used for the final evaluation (Table~\ref{tab:fer-test}). Rows are true labels and columns are predictions; values are row-normalized.}
 \end{figure}
 
+\FloatBarrier
 \subsection{KDEF study, cross-dataset and creative models}
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\linewidth]{../../../figures/task2_kdef_confusion_test}
 \caption{KDEF test subjects (196 images): Logistic Regression, SVM and Random Forest with HOG features, left to right.}
 \label{fig:kdef-confusion}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.6\linewidth]{../../../figures/task3_kdef_to_fer_confusion_matrix}
 \caption{KDEF$\rightarrow$FER: the Task 2 SVM trained on all KDEF frontal images, evaluated on all FER2013 images. Rows are true labels, row-normalized.}
 \label{fig:cross-confusion}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.6\linewidth]{../../../figures/creative_confusion_test}
 \caption{Creative-challenge final model (SVM on HOG + landmarks, cleaned training set), PrivateTest split.}
 \label{fig:creative-confusion}
 \end{figure}
 
+\FloatBarrier
 \subsection{Fuzzy classifier: held-out KDEF subjects}
 
-\begin{table}[htbp]
+\begin{table}[H]
 \centering
 \caption{Final fuzzy classifier confusion matrix
 (counts; 196 test images from 14 unseen subjects).

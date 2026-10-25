@@ -12,7 +12,7 @@ Starting from Task 1 baseline, each technique tested one change at a time, using
 
 \begin{table}[h]
 \centering\small
-\caption{Validation (PublicTest) ablation with Logistic Regression. Each row adds one change to the rows above it.}
+\caption{Validation (PublicTest) ablation with Logistic Regression. Rows 1 to 3 are cumulative. Class balancing (row 4) was tested on top of landmarks and cleaning, and was rejected. Mirrored augmentation (row 5) was tested on top of landmarks and cleaning, without class balancing, and was also rejected. The final model uses landmarks and cleaning only.}
 \label{tab:creative}
 \begin{tabular}{@{}lcccc@{}}\toprule
 Variant & Accuracy & Macro-F1 & Disgust F1 & Training images \\\midrule
