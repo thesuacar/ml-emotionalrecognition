@@ -1,24 +1,14 @@
 \section{Task 2: KDEF dataset study (15\%)}
-% Source: notebooks/02_task2_kdef_dataset_study.ipynb (saved outputs).
+Use the best FER2013 feature representation and retrain the corresponding classifiers on preprocessed frontal KDEF images. Partition subjects 80/20 so each subject appears in exactly one split; document counts and random seed. \fillme{Explain KDEF model selection without test-set leakage.}
 
-\textbf{Setup.} We retrained the three classifiers on HOG features, the best FER2013 representation (Task 1), using the 980 frontal KDEF images of 70 subjects. Images were preprocessed with the provided script: face detection, a 20\% margin around the detected box, grayscale conversion and resizing to $48\times48$. The split is 80/20 by subject identity: 56 subjects (784 images) for training and 14 subjects (196 images) for testing, with 28 test images per emotion. No subject appears in both sets.
-
-\textbf{Model selection.} Hyperparameters were selected by 5-fold cross-validation on the 56 training subjects, grouped by subject so that no person appears in both folds of a split, scored by macro-F1. The grid covered the feature scaler, the regularization constant $C$ (Logistic Regression and SVM), $\gamma$ (SVM), and tree depth, leaf size and number of trees (Random Forest). Each selected configuration was refit on all 784 training images and evaluated once on the 196 test images. The selected settings were: Logistic Regression with a power-transform scaler and $C = 0.01$; RBF-SVM with a power-transform scaler, $C = 10$ and $\gamma = 10^{-4}$; and Random Forest with maximum depth 10.
-
-\begin{table}[h]
-\centering\small
-\caption{KDEF results with the HOG representation. CV: subject-grouped 5-fold cross-validation on the 56 training subjects. Test: 14 held-out subjects (196 images).}
+\begin{table}[h]\centering\small
+\caption{KDEF held-out subject test set, with FER-selected feature representation.}
 \label{tab:kdef}
-\begin{tabular}{@{}lcccc@{}}\toprule
-Classifier & CV macro-F1 & Test accuracy & Test bal. acc. & Test macro-F1 \\\midrule
-Logistic Regression & 0.669 & 0.577 & 0.577 & 0.581 \\
-SVM & \textbf{0.679} & 0.602 & 0.602 & 0.604 \\
-Random Forest & 0.611 & \textbf{0.622} & \textbf{0.622} & \textbf{0.614} \\
+\begin{tabular}{@{}lccc@{}}\toprule
+Classifier & Accuracy & Bal. acc. & Macro-F1 \\\midrule
+Logistic Regression & -- & -- & -- \\
+SVM & -- & -- & -- \\
+Random Forest & -- & -- & -- \\
 \bottomrule\end{tabular}
 \end{table}
-
-\textbf{Why KDEF is easier or harder than FER2013.} On the same HOG features and classifiers, KDEF scores are higher: the best cross-validated macro-F1 is 0.679 on KDEF against 0.505 on FER2013 validation. The test gap is much smaller (0.604 against 0.568), and with 196 test images a 95\% interval on accuracy is about $\pm0.07$, so the test comparison is only indicative. The likely reasons are that KDEF has controlled studio lighting, a frontal pose, exaggerated posed expressions and balanced classes (28 test images per emotion). FER2013 is in-the-wild, unevenly labelled and strongly imbalanced (Section~\ref{sec:data}). KDEF is also smaller (70 people, one pose), so it does not test robustness to pose or lighting.
-
-\textbf{Which models change ranking.} On FER2013 validation the order is SVM (0.505), Random Forest (0.440), Logistic Regression (0.395). On KDEF the order is SVM (0.679), Logistic Regression (0.669), Random Forest (0.611) in cross-validation, and Random Forest (0.614), SVM (0.604), Logistic Regression (0.581) on the test subjects. The Random Forest moves from second on FER2013 to last in cross-validation and first on the test subjects, so its position depends on the evaluation set. Given the test size, the test differences of 0.01 to 0.03 are not reliable. The SVM is the most consistent winner in cross-validation and on FER2013.
-
-\textbf{Easiest and hardest emotions.} For the SVM on the test subjects, F1 is highest for Happy (0.93) and lowest for Fear (``afraid'', 0.33), with Neutral (0.66), Disgust (0.65), Surprise (0.62), Sad (0.55) and Angry (0.50) in between. Happy and Surprise are the emotions with the clearest mouth and eye shapes, which is consistent with FER2013 (Section~\ref{sec:task1}). The KDEF confusion matrices are in Appendix~\ref{app:cm}. Which emotions transfer between the two datasets is discussed in Section~\ref{sec:task3}.
+\fillme{Explain why controlled KDEF imagery differs from in-the-wild FER2013, whether model ranking changes, the easiest/hardest emotions, and which emotions might transfer well. Cite KDEF confusion matrices in Appendix A.}
