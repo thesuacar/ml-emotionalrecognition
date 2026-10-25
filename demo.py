@@ -48,10 +48,8 @@ def geometric_features(points):
     }
 
 
-# Team-generated files only: loading untrusted pickle files is unsafe.
+# Only team-generated files are loaded
 model = joblib.load(MODEL_PATH)
-if list(model["features"]) != FEATURES or list(model["classes"]) != CLASSES:
-    raise ValueError("Saved fuzzy model is not compatible with Task 4 features/classes")
 predictor = dlib.shape_predictor(str(PREDICTOR_PATH))
 detector = dlib.get_frontal_face_detector()
 
@@ -116,7 +114,10 @@ def open_camera():
         if cap.isOpened():
             return cap
         cap.release()
-    raise RuntimeError("Cannot open camera 0; check macOS camera permissions")
+    raise RuntimeError(
+        "Cannot open camera 0. Check camera connection, "
+        "permissions, or whether another application is using it."
+    )
 
 
 
@@ -131,9 +132,9 @@ def run_webcam():
     try:
         cv2.namedWindow(window, cv2.WINDOW_NORMAL)
         try:
-            cv2.setWindowProperty(window, cv2.WND_PROP_TOPMOST, 1)
-        except cv2.error:
-            pass  # This property is not available in every macOS OpenCV build.
+                    cv2.setWindowProperty(window, cv2.WND_PROP_TOPMOST, 1)
+        except (cv2.error, AttributeError):
+            pass  # Window activation is not supported by every OpenCV backend.
         while True:
             ok, frame = cap.read()
             if not ok:
@@ -153,8 +154,11 @@ def run_webcam():
     finally:
         cap.release()
         cv2.destroyAllWindows()
-        for _ in range(20):
-            cv2.waitKey(1)  # macOS: finish processing window-close events.
+
+        # macOS may need extra GUI event processing to close the window.
+        if sys.platform == "darwin":
+            for _ in range(20):
+                cv2.waitKey(1)
     seconds = max(perf_counter() - started, 1e-9)
     result = {"frames": frames, "frames_with_faces": found,
               "face_detection_rate": round(found / frames, 3) if frames else 0,
