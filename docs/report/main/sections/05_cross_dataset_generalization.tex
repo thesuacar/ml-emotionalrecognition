@@ -1,15 +1,109 @@
-\section{Task 3: Cross-dataset generalization (20\%)}
-Test both directions required by the assignment protocol: \textbf{FER$\rightarrow$KDEF} (FER-trained model applied to cropped/preprocessed frontal KDEF) and \textbf{KDEF$\rightarrow$FER} (retrain the KDEF-selected configuration on its training subjects, then evaluate on FER). Keep matching $48\times48$ grayscale normalization and class mapping throughout; do not adapt the test-domain examples using ground-truth labels. Keep FER PrivateTest untouched until final evaluation.
+\section{Task 3: Cross-dataset generalization}
+% Number tables and figures per subsection in this section only (e.g. Table 5.2.1);
+% the global numbering is restored at the end of the file.
+\newcounter{savedtablecross}\setcounter{savedtablecross}{\value{table}}
+\newcounter{savedfigurecross}\setcounter{savedfigurecross}{\value{figure}}
+\counterwithin{table}{subsection}
+\counterwithin{figure}{subsection}
+% Before the first subsection, leave out the ".0" (e.g. Figure 4.1 instead of 4.0.1)
+\renewcommand{\thetable}{\ifnum\value{subsection}=0 \thesection\else\thesubsection\fi.\arabic{table}}
+\renewcommand{\thefigure}{\ifnum\value{subsection}=0 \thesection\else\thesubsection\fi.\arabic{figure}}
+
+In Task 2 our models did well on KDEF, but KDEF is a very clean dataset. Here we test what happens when the model trained on KDEF has to recognise emotions in FER2013, and we look at why it does better or worse.
+
+\subsection{Experimental setup}
+
+We take the best model from Task 2, the SVM with HOG features, and train it on all 980 frontal KDEF images. We then test it on the full FER2013 dataset (35,887 images). The model has never seen any FER2013 image, so all of them can be used for testing. Both datasets are preprocessed in the same way and use the same HOG features (Section \ref{sec:data-protocol}), and nothing is tuned on FER2013.
+
+To see how big the drop is, we compare the result with two models that are trained and tested on the same dataset: the KDEF model from Task 2 and the FER2013 model from Task 1.
+
+\subsection{Results}
 
 \begin{table}[h]\centering\small
-\caption{Within- and cross-dataset performance, on explicitly stated held-out sets.}
-\label{tab:cross}
-\begin{tabular}{@{}lccc@{}}\toprule
-Train $\rightarrow$ evaluation & Accuracy & Bal. acc. & Macro-F1 \\\midrule
-FER $\rightarrow$ FER (PrivateTest) & -- & -- & -- \\
-KDEF $\rightarrow$ KDEF (test subjects) & -- & -- & -- \\
-FER $\rightarrow$ KDEF (test subjects) & -- & -- & -- \\
-KDEF $\rightarrow$ FER (PrivateTest) & -- & -- & -- \\
+\begin{tabular}{@{}llccc@{}}\toprule
+Trained on & Tested on & Accuracy & Balanced accuracy & Macro-F1 \\\midrule
+KDEF & KDEF (Task 2, cross-validation) & 0.686 & 0.686 & 0.679 \\
+FER2013 & FER2013 (Task 1, PrivateTest) & 0.575 & 0.550 & 0.568 \\
+KDEF & FER2013 (full dataset) & 0.225 & 0.215 & 0.195 \\
 \bottomrule\end{tabular}
+\caption{Results of the HOG + SVM model when it is trained and tested on the same dataset, and when it is trained on KDEF and tested on FER2013.}
+\label{tab:cross}
 \end{table}
-\fillme{List any model/input adaptations, define domain shift, quantify transfer degradation against in-domain comparisons, analyze per-emotion confusion, and explain which features transfer best and why. Note crop/alignment, resolution and grayscale/RGB as confounders.}
+
+The drop is large (Table \ref{tab:cross}). The macro-F1 falls from 0.679 on KDEF to 0.195 on FER2013, and the balanced accuracy of 0.215 is only a little better than guessing at random, which would give about 0.14 (1 in 7). FER2013 itself is not the problem: a model trained on FER2013 reaches 0.568. The problem is that the two datasets are too different.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.85\linewidth]{../../../figures/task3_kdef_to_fer_confusion_matrix.png}
+  \caption{Confusion matrix of the KDEF-trained SVM on the full FER2013 dataset, normalised per row.}
+  \label{fig:cross-confusion}
+\end{figure}
+
+The confusion matrix (Figure \ref{fig:cross-confusion}) shows what goes wrong. The model puts most faces into just a few emotions, mainly Sad, Fear and Angry. For example, 39\% of the disgusted faces and 32\% of the neutral faces are predicted as Sad. Neutral is almost never predicted at all, even though it is one of the most common emotions in FER2013. Only Happy and Surprise are recognised a bit more often than the rest.
+
+\subsection{Assignment Questions}
+
+\textbf{What adaptations did you have to make to run the model?} The two datasets have different formats, so we first made them the same. KDEF photos are large colour images, so we cut out the face with a 20\% margin, turned it into grayscale, resized it to 48x48 pixels and scaled the values to between 0 and 1. FER2013 images already have this size, so they only needed rescaling. Both datasets then go through the same HOG extraction. KDEF names its emotions with words and FER2013 with numbers, so we matched them up (for example, "afraid" in KDEF becomes "Fear"). All seven emotions exist in both datasets. We did not tune anything on FER2013, so the test stays fair.
+
+\textbf{What is domain shift?} Domain shift means that the data a model is tested on is different from the data it was trained on. The model learns patterns from its training data, but those patterns may not hold for the new data. KDEF and FER2013 differ in three ways:
+\begin{itemize}[nosep]
+  \item \textbf{How often each emotion appears.} KDEF has the same number of images for every emotion. In FER2013, 25\% of the images are Happy and only 1.5\% are Disgust (Figure \ref{fig:cross-shift}, left).
+  \item \textbf{What the images look like.} KDEF photos are all taken in the same studio, while FER2013 images come from the web. KDEF images are darker, have less contrast and look much more alike (Figure \ref{fig:cross-shift}, right). The mean faces in Figure \ref{fig:mean-faces} also show that KDEF faces are always in the same place in the image, while FER2013 faces are not.
+  \item \textbf{How the emotions are shown.} KDEF actors pose each emotion clearly, while FER2013 faces often show subtle, natural expressions, and some of them are labelled wrongly.
+\end{itemize}
+
+\begin{figure}[h]
+  \centering
+  \begin{minipage}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{../../../figures/task3_label_split.png}
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.49\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{../../../figures/task3_brightness_and_contrast.png}
+  \end{minipage}
+  \caption{Left: share of each emotion in FER2013 and KDEF. Right: brightness and contrast of the images in both datasets.}
+  \label{fig:cross-shift}
+\end{figure}
+
+To see whether the model also notices these differences, we trained a simple classifier to guess whether an image comes from KDEF or FER2013, using only its HOG features. With 980 images from each dataset, it guesses right 98.8\% of the time (balanced accuracy). So, in the features our model uses, the two datasets look completely different.
+
+\textbf{Why does performance degrade?} The model only learned from 980 studio photos of 70 people looking straight into the camera. FER2013 has many things it has never seen: turned heads, hands in front of the face, children, tilted or blurry photos and all kinds of lighting (Figure \ref{fig:cross-errors}). HOG also looks at fixed parts of the image, so when the eyes and mouth are in a different place, as in many FER2013 images, the features no longer match what the model learned. Overall brightness matters less, because HOG normalises it away, but shadows and noise still add edges that have nothing to do with the expression. Finally, the model does not know that some emotions, like Happy, are much more common in FER2013 than others.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=\linewidth]{../../../figures/task3_kdef_to_fer_errors.png}
+  \caption{Random FER2013 images that the KDEF-trained model gets wrong, with the true and predicted emotion.}
+  \label{fig:cross-errors}
+\end{figure}
+
+\begin{table}[h]\centering\small
+\begin{tabular}{@{}lccccccc@{}}\toprule
+ & Happy & Surprise & Sad & Angry & Fear & Disgust & Neutral \\\midrule
+F1 on KDEF (cross-validation) & 0.89 & 0.71 & 0.50 & 0.66 & 0.46 & 0.69 & 0.66 \\
+F1 on FER2013 & 0.38 & 0.31 & 0.24 & 0.19 & 0.18 & 0.04 & 0.02 \\
+\bottomrule\end{tabular}
+\caption{F1 per emotion of the KDEF-trained SVM on KDEF and on FER2013.}
+\label{tab:cross-emotion}
+\end{table}
+
+Some emotions suffer more than others (Table \ref{tab:cross-emotion}). As we expected in Task 2, Happy and Surprise hold up best, because a smile or an open mouth looks much the same in a studio photo and in a web photo. Disgust and Neutral do well on KDEF but fail almost completely on FER2013. A real neutral face, with natural shadows and a relaxed mouth, apparently looks sad or scared to a model that has only seen KDEF's very clean neutral faces.
+
+\textbf{Which features transfer best?} We only used HOG features, so we checked which of the 900 HOG features transfer best. For each feature, we computed its average value for every emotion, once in KDEF and once in FER2013, and measured how similar these two patterns are with a correlation. A feature with a correlation close to 1 goes up and down with the emotions in the same way in both datasets, so what the model learned from it still works on FER2013.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.38\linewidth]{../../../figures/task3_hog_feature_transfer.png}
+  \caption{How well the HOG features in each part of the face transfer from KDEF to FER2013 (blue: same pattern in both datasets, red: opposite pattern).}
+  \label{fig:cross-hog}
+\end{figure}
+
+Figure \ref{fig:cross-hog} shows that the features around the eyes, mouth and cheeks transfer best, with correlations up to 0.95. These are exactly the parts of the face that show emotions. The features at the edges of the image, which cover hair, background and the outline of the face, transfer worst, and some even behave the opposite way (as low as -0.88). This matches the alignment problem: the centre of the face is in roughly the same place in both datasets, but the edges are not. We did not test other feature types here. We would expect HOG to transfer better than PCA on raw pixels, which depends directly on the lighting of the KDEF photos, while facial landmarks ignore lighting but are hard to find reliably in a small 48x48 image.
+
+\FloatBarrier
+
+% Back to the global table and figure numbering for the following sections
+\counterwithout{table}{subsection}
+\counterwithout{figure}{subsection}
+\setcounter{table}{\value{savedtablecross}}
+\setcounter{figure}{\value{savedfigurecross}}
