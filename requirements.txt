@@ -1,0 +1,17 @@
+# Pinned versions of the general environment (environments/environment-general.yml).
+# Used by notebooks 00a, 00b, 01, 02, 03 and 05. Requires Python 3.12.
+# PyFUME and the fuzzy classifier are NOT included: they need environments/environment-fuzzy.yml.
+numpy==2.5.4
+pandas==3.0.6
+scikit-learn==1.9.1
+scikit-image==0.26.0
+opencv-python==4.14.0.94
+dlib==20.0.1
+imbalanced-learn==0.14.2
+matplotlib==3.11.2
+seaborn==0.13.2
+joblib==1.6.0
+pillow==13.0.0
+scipy==1.18.1
+jupyterlab==4.6.4
+ipykernel==7.3.0
