@@ -6,6 +6,15 @@
 
 \textbf{Common representation.} Detect and crop KDEF faces with a margin preserving forehead and jaw; convert to grayscale, resize to $48\times48$ and apply the same normalization as FER. Apply identical feature extraction at training and inference. Fit any scaling, PCA or learned transformation only on training data.
 
+\textbf{HOG features.} Histogram of Oriented Gradients (HOG) looks at the edges in an image and identifies where the brightness changes and in which direction. To extract the features, the $48\times48$ grayscale image is cut into a $6\times6$ grid of cells of $8\times8$ pixels. In each cell, the change in brightness is measured in 9 different directions ($0^\circ, 20^\circ, \dots, 160^\circ$). We then slide a $2\times2$ block across the grid, which results in $5\times5$ overlapping block positions:
+\begin{equation*}
+\text{HOG features}
+= \underbrace{(5 \times 5)}_{\text{block positions}}
+\times \underbrace{(2 \times 2)}_{\text{cells per block}}
+\times \underbrace{9}_{\text{directions}}
+= 900
+\end{equation*}
+
 \textbf{Fuzzy classifier protocol.}
 For Task 4, geometric features were extracted directly from
 original-resolution frontal KDEF images, rather than the
