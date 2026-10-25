@@ -5,12 +5,15 @@
 \newcounter{savedfigure}\setcounter{savedfigure}{\value{figure}}
 \counterwithin{table}{subsection}
 \counterwithin{figure}{subsection}
+% Before the first subsection, leave out the ".0" (e.g. Figure 4.1 instead of 4.0.1)
+\renewcommand{\thetable}{\ifnum\value{subsection}=0 \thesection\else\thesubsection\fi.\arabic{table}}
+\renewcommand{\thefigure}{\ifnum\value{subsection}=0 \thesection\else\thesubsection\fi.\arabic{figure}}
 
 In this task we take the best FER2013 representation from Task~1, HOG, retrain the three classifiers on KDEF, and compare the results with FER2013.
 
-The Karolinska Directed Emotional Faces - KDEF was a dataset that was generated in 1998. It has a total of 4900 pictures, of 70 individuals displaying 7 different emotions. The subjects for this dataset was chosen with a specific selection criteria some of which include having no beard, mustache, earrings etc. All subjects were given special gray shirts and all the photos were taken at a distance of 3m from the camera. Each subject was taken photos in 2 sessions, 5 poses for each of the 7 emotions. The pose that is of most interest to us is \textit{straight}
+The Karolinska Directed Emotional Faces - KDEF was a dataset that was generated in 1998. It has a total of 4900 pictures, of 70 individuals displaying 7 different emotions. The subjects for this dataset was chosen with a specific selection criteria some of which include having no beard, mustache, earrings etc. All subjects were given special gray shirts and all the photos were taken at a distance of 3m from the camera. Each subject was taken photos in 2 sessions, 5 poses for each of the 7 emotions. The pose that is of most interest to us is \textit{straight}.
 
-Unlike the FER2013 dataset(which are $48\times48$ dimensions), the KDEF dataset  has images of dimensions $562\times762$ and RGB images. To compare the 2 datasets, the KDEF images need to be converted to the FER2013 format: a Haar cascade detects the face, the box is enlarged by 20\% so the whole face and some context are kept, and the crop is converted to grayscale, resized to $48\times48$ and scaled to $[0,1]$
+Unlike the FER2013 dataset (which are $48\times48$ dimensions), the KDEF dataset  has images of dimensions $562\times762$ and RGB images. To compare the 2 datasets, the KDEF images need to be converted to the FER2013 format: a Haar cascade detects the face, the box is enlarged by 20\% so the whole face and some context are kept, and the crop is converted to grayscale, resized to $48\times48$ and scaled to $[0,1]$.
 
 The data is split 80/20 by subject i.e out of the 70 subjects, 56 of them are used in the training set, and 14 are in the test set.  This is to ensure there is no data leakage into the test set. KDEF is perfectly balanced, with 112 training and 28 test images per emotion (Figure~\ref{fig:kdef-split}).
 
@@ -26,7 +29,7 @@ In the previous task, we found out that the best feature representation is Histo
 
 \subsection{Model training and selection}
 
-We train the same three classifiers as done in Task 1: Random Forest, Logistic Regression, and for each classifier we run a grid search with 5-fold cross-validation, where the folds are also split by subject (using GroupKFold), so the model is always validated on subjects it has not seen during training. 
+We train the same three classifiers as in Task 1: Logistic Regression, SVM and Random Forest. For each classifier we run a grid search with 5-fold cross-validation, where the folds are also split by subject (using GroupKFold), so the model is always validated on subjects it has not seen during training. 
 
 \begin{table}[h]\centering\small
 \begin{tabular}{@{}llp{0.5\linewidth}@{}}\toprule
@@ -60,7 +63,7 @@ Logistic Regression & 0.395 & 0.378 & 0.669 & 0.581 \\
 SVM & \textbf{0.505} & \textbf{0.568} & \textbf{0.679} & 0.604 \\
 Random Forest & 0.440 & -- & 0.611 & \textbf{0.614} \\
 \bottomrule\end{tabular}
-\caption{Macro-F1 of models trained on HOG features of KDEF }
+\caption{Macro-F1 with HOG features, for the models trained and evaluated on FER2013 (Task~1) and on KDEF.}
 \label{tab:kdef}
 
 \end{table}
@@ -101,7 +104,7 @@ On KDEF, Logistic Regression jumps from last to second place in validation, whil
 
 \begin{table}[h]\centering\small
 
-\label{tab:emotion-both}
+
 \begin{tabular}{@{}lcccc@{}}\toprule
  & \multicolumn{3}{c}{KDEF} & FER2013 \\\cmidrule(lr){2-4}\cmidrule(l){5-5}
 Emotion & Logistic Regression & SVM & Random Forest & SVM \\\midrule
@@ -114,6 +117,7 @@ Surprise & 0.63 & 0.62 & 0.63 & 0.73 \\
 Neutral & 0.61 & 0.66 & 0.69 & 0.55 \\
 \bottomrule\end{tabular}
 \caption{F1 score per emotion - classifier comparison }
+\label{tab:emotion-both}
 \end{table}
 
 \begin{figure}[H]
