@@ -1,14 +1,138 @@
-\section{Task 2: KDEF dataset study (15\%)}
-Use the best FER2013 feature representation and retrain the corresponding classifiers on preprocessed frontal KDEF images. Partition subjects 80/20 so each subject appears in exactly one split; document counts and random seed. \fillme{Explain KDEF model selection without test-set leakage.}
+\section{Task 2: KDEF dataset study}
+% Number tables and figures per subsection in this section only (e.g. Table 4.3.1);
+% the global numbering is restored at the end of the file.
+\newcounter{savedtable}\setcounter{savedtable}{\value{table}}
+\newcounter{savedfigure}\setcounter{savedfigure}{\value{figure}}
+\counterwithin{table}{subsection}
+\counterwithin{figure}{subsection}
+% Before the first subsection, leave out the ".0" (e.g. Figure 4.1 instead of 4.0.1)
+\renewcommand{\thetable}{\ifnum\value{subsection}=0 \thesection\else\thesubsection\fi.\arabic{table}}
+\renewcommand{\thefigure}{\ifnum\value{subsection}=0 \thesection\else\thesubsection\fi.\arabic{figure}}
+
+In this task we take the best FER2013 representation from Task~1, HOG, retrain the three classifiers on KDEF, and compare the results with FER2013.
+
+The Karolinska Directed Emotional Faces - KDEF was a dataset that was generated in 1998. It has a total of 4900 pictures, of 70 individuals displaying 7 different emotions. The subjects for this dataset was chosen with a specific selection criteria some of which include having no beard, mustache, earrings etc. All subjects were given special gray shirts and all the photos were taken at a distance of 3m from the camera. Each subject was taken photos in 2 sessions, 5 poses for each of the 7 emotions. The pose that is of most interest to us is \textit{straight}.
+
+Unlike the FER2013 dataset (which are $48\times48$ dimensions), the KDEF dataset  has images of dimensions $562\times762$ and RGB images. To compare the 2 datasets, the KDEF images need to be converted to the FER2013 format: a Haar cascade detects the face, the box is enlarged by 20\% so the whole face and some context are kept, and the crop is converted to grayscale, resized to $48\times48$ and scaled to $[0,1]$.
+
+The data is split 80/20 by subject i.e out of the 70 subjects, 56 of them are used in the training set, and 14 are in the test set.  This is to ensure there is no data leakage into the test set. KDEF is perfectly balanced, with 112 training and 28 test images per emotion (Figure~\ref{fig:kdef-split}).
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.5\linewidth]{../../../figures/task2_kdef_class_distribution.png}
+  \caption{Number of KDEF images per emotion in the training (56 subjects) and test (14 subjects) split.}
+  \label{fig:kdef-split}
+\end{figure}
+
+In the previous task, we found out that the best feature representation is Histogram of Oriented Gradients (HOG), so every KDEF image is described with the same 900 HOG features (Section~\ref{sec:data-protocol}).
+
+
+\subsection{Model training and selection}
+
+We train the same three classifiers as in Task 1: Logistic Regression, SVM and Random Forest. For each classifier we run a grid search with 5-fold cross-validation, where the folds are also split by subject (using GroupKFold), so the model is always validated on subjects it has not seen during training. 
 
 \begin{table}[h]\centering\small
-\caption{KDEF held-out subject test set, with FER-selected feature representation.}
-\label{tab:kdef}
-\begin{tabular}{@{}lccc@{}}\toprule
-Classifier & Accuracy & Bal. acc. & Macro-F1 \\\midrule
-Logistic Regression & -- & -- & -- \\
-SVM & -- & -- & -- \\
-Random Forest & -- & -- & -- \\
+\begin{tabular}{@{}llp{0.5\linewidth}@{}}\toprule
+Classifier & Hyperparameter & Values searched \\\midrule
+Logistic Regression & Scaler & none, Standard, Robust, MinMax, \textbf{PowerTransformer} \\
+ & $C$ & \textbf{0.01}, 0.1, 1, 10 \\
+ & \multicolumn{2}{l}{\footnotesize\emph{20 configurations}} \\\midrule
+SVM & Scaler & Standard, Robust, \textbf{PowerTransformer} \\
+ & Kernel & linear, \textbf{RBF}, polynomial \\
+ & $C$ & 0.01, 0.1, 1, \textbf{10} \\
+ & $\gamma$ (RBF only) & 0.01, 0.001, \textbf{0.0001}, auto \\
+ & Degree (polynomial only) & 2, 3, 4 \\
+ & \multicolumn{2}{l}{\footnotesize\emph{96 configurations}} \\\midrule
+Random Forest & Number of trees & 100, \textbf{200} \\
+ & Maximum depth & 3, 5, 8, \textbf{10}, 15, 20, unlimited \\
+ & Minimum samples per leaf & 1, \textbf{2}, 5, 10, 20, 50 \\
+ & \multicolumn{2}{l}{\footnotesize\emph{84 configurations}} \\
 \bottomrule\end{tabular}
+\caption{Hyperparameter tuning grid for KDEF: Selected values (highest macro-F1) are in bold}
+\label{tab:kdef-grid}
 \end{table}
-\fillme{Explain why controlled KDEF imagery differs from in-the-wild FER2013, whether model ranking changes, the easiest/hardest emotions, and which emotions might transfer well. Cite KDEF confusion matrices in Appendix A.}
+
+
+\subsection{Results}
+
+\begin{table}[h]\centering\small
+\begin{tabular}{@{}lcccc@{}}\toprule
+ & \multicolumn{2}{c}{FER2013} & \multicolumn{2}{c}{KDEF} \\\cmidrule(lr){2-3}\cmidrule(l){4-5}
+Classifier & Validation & Test & Validation & Test \\\midrule
+Logistic Regression & 0.395 & 0.378 & 0.669 & 0.581 \\
+SVM & \textbf{0.505} & \textbf{0.568} & \textbf{0.679} & 0.604 \\
+Random Forest & 0.440 & -- & 0.611 & \textbf{0.614} \\
+\bottomrule\end{tabular}
+\caption{Macro-F1 with HOG features, for the models trained and evaluated on FER2013 (Task~1) and on KDEF.}
+\label{tab:kdef}
+
+\end{table}
+Table~\ref{tab:kdef} shows that all three classifiers score higher on KDEF than on FER2013, even though they are trained on only 784 images instead of about 28{,}700. The reason is that KDEF is a much cleaner dataset. Every photo is taken in the same studio, with the same lighting and camera position, and the actors show each emotion clearly, so the faces line up well and the expression is almost the only thing that differs between images. The HOG features of two happy faces therefore look very similar, and the classifiers need few examples to learn each emotion. FER2013 images come from the web, with different lighting, head poses, faces partly covered by hands or glasses, and labels that are sometimes wrong, so the classifiers have to learn the same emotion from very different-looking images.
+
+
+\subsection{Assignment Questions}
+\textbf{Why are KDEF images easier or harder to classify?} Overall, KDEF is easier: with the same HOG features, the SVM reaches a macro-F1 of 0.679 in cross-validation and 0.604 on the test subjects. As mentioned before, the images in the KDEF dataset are consistent and is balanced. Each facial attribute is present in a similar pixel vicinity across all images of an emotion. This makes the models learn better, unlike the FER2013 where there is no consistency in the subjects present, alignment and facial features/attributes of the face etc. 
+
+To understand how these alignment of these facial features could be of concern for the model, we generated the mean face for each emotion in both datasets. This was done to understand how well positioned each facial feature is in all images across the dataset. The more blurry the images are, the more inconsistent the images are in the dataset for each emotion.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\linewidth]{../../../figures/task2_mean_faces_kdef_vs_fer.png}
+  \caption{Mean face per emotion of KDEF and FER2013 training images}
+  \label{fig:mean-faces}
+\end{figure}
+
+\FloatBarrier
+
+\textbf{Which models change ranking?} 
+
+\begin{table}[h]\centering\small
+\begin{tabular}{@{}clll@{}}\toprule
+Rank & FER2013 validation & KDEF cross-validation & KDEF test \\\midrule
+1 & SVM (0.505) & SVM (0.679) & Random Forest (0.614) \\
+2 & Random Forest (0.440) & Logistic Regression (0.669) & SVM (0.604) \\
+3 & Logistic Regression (0.395) & Random Forest (0.611) & Logistic Regression (0.581) \\
+\bottomrule\end{tabular}
+\caption{FER2013 vs KDEF model comparison}
+\label{tab:kdef-model-ranking-comparison}
+\end{table}
+
+On KDEF, Logistic Regression jumps from last to second place in validation, while the Random Forest falls to last. We think this is because the well-aligned KDEF faces make the HOG features almost linearly separable, so a strongly regularized linear model ($C=0.01$) works well with few training images. Although, the Random Forest performs better in the test set by a small margin, we choose the best model from the validation set.
+
+
+\textbf{Which emotions transfer well between datasets?} To see which emotions hold up on both datasets, we compare the F1 score per emotion of the KDEF models with that of the FER-trained SVM from Task~1 (Table~\ref{tab:emotion-both}). Happy is the easiest emotion on both datasets (0.93 on KDEF and 0.75 on FER2013 for the SVM), and Surprise also scores well on both (0.62 and 0.73). Both expressions have large, distinctive shapes, a smile or an open mouth with raised eyebrows, which HOG picks up whether the expression is posed in a studio or caught in a web photo. Disgust scores well on both too, but FER2013 contains very few Disgust images (1.5\%), so this result is less certain. Fear, Sad and Angry are among the hardest emotions on both datasets, with F1 scores between 0.33 and 0.55.
+
+\begin{table}[h]\centering\small
+
+
+\begin{tabular}{@{}lcccc@{}}\toprule
+ & \multicolumn{3}{c}{KDEF} & FER2013 \\\cmidrule(lr){2-4}\cmidrule(l){5-5}
+Emotion & Logistic Regression & SVM & Random Forest & SVM \\\midrule
+Angry & 0.50 & 0.50 & 0.65 & 0.44 \\
+Disgust & 0.53 & 0.65 & 0.69 & 0.62 \\
+Fear & 0.41 & 0.33 & 0.34 & 0.46 \\
+Happy & \textbf{0.88} & \textbf{0.93} & \textbf{0.77} & \textbf{0.75} \\
+Sad & 0.51 & 0.55 & 0.53 & 0.43 \\
+Surprise & 0.63 & 0.62 & 0.63 & 0.73 \\
+Neutral & 0.61 & 0.66 & 0.69 & 0.55 \\
+\bottomrule\end{tabular}
+\caption{F1 score per emotion - classifier comparison }
+\label{tab:emotion-both}
+\end{table}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{../../../figures/task2_kdef_confusion_test.png}
+  \caption{Confusion matrices(normalized values) for KDEF dataset}
+  \label{fig:kdef-confusion}
+\end{figure}
+
+The confusion matrices in Figure~\ref{fig:kdef-confusion} show that most mistakes happen between emotions that look alike. Fear is the clearest example: the SVM mistakes more fearful faces for Surprise (43\%) than it gets right (36\%), and the other two classifiers do the same. This is not surprising, since both expressions have wide-open eyes, raised eyebrows and an open mouth. In the same way, Sad is often mistaken for Neutral (21\%), and Angry for Fear (25\%) or Disgust (14\%). Based on this, we expect Happy and Surprise to transfer best between the datasets, and Fear, Sad and Angry to transfer worst.
+
+\FloatBarrier
+
+% Back to the global table and figure numbering for the following sections
+\counterwithout{table}{subsection}
+\counterwithout{figure}{subsection}
+\setcounter{table}{\value{savedtable}}
+\setcounter{figure}{\value{savedfigure}}
