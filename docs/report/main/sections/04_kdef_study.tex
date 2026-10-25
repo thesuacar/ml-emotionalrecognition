@@ -17,21 +17,21 @@ Unlike the FER2013 dataset (which are $48\times48$ dimensions), the KDEF dataset
 
 The data is split 80/20 by subject i.e out of the 70 subjects, 56 of them are used in the training set, and 14 are in the test set.  This is to ensure there is no data leakage into the test set. KDEF is perfectly balanced, with 112 training and 28 test images per emotion (Figure~\ref{fig:kdef-split}).
 
-\begin{figure}[h]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.5\linewidth]{../../../figures/task2_kdef_class_distribution.png}
   \caption{Number of KDEF images per emotion in the training (56 subjects) and test (14 subjects) split.}
   \label{fig:kdef-split}
 \end{figure}
 
-In the previous task, we found out that the best feature representation is Histogram of Oriented Gradients (HOG), so every KDEF image is described with the same 900 HOG features (Section~\ref{sec:data-protocol}).
+In the previous task, we found out that the best feature representation is Histogram of Oriented Gradients (HOG), so every KDEF image is described with the same 900 HOG features (Section~\ref{sec:data}).
 
 
 \subsection{Model training and selection}
 
 We train the same three classifiers as in Task 1: Logistic Regression, SVM and Random Forest. For each classifier we run a grid search with 5-fold cross-validation, where the folds are also split by subject (using GroupKFold), so the model is always validated on subjects it has not seen during training. 
 
-\begin{table}[h]\centering\small
+\begin{table}[H]\centering\small
 \begin{tabular}{@{}llp{0.5\linewidth}@{}}\toprule
 Classifier & Hyperparameter & Values searched \\\midrule
 Logistic Regression & Scaler & none, Standard, Robust, MinMax, \textbf{PowerTransformer} \\
@@ -55,7 +55,7 @@ Random Forest & Number of trees & 100, \textbf{200} \\
 
 \subsection{Results}
 
-\begin{table}[h]\centering\small
+\begin{table}[H]\centering\small
 \begin{tabular}{@{}lcccc@{}}\toprule
  & \multicolumn{2}{c}{FER2013} & \multicolumn{2}{c}{KDEF} \\\cmidrule(lr){2-3}\cmidrule(l){4-5}
 Classifier & Validation & Test & Validation & Test \\\midrule
@@ -86,7 +86,7 @@ To understand how these alignment of these facial features could be of concern f
 
 \textbf{Which models change ranking?} 
 
-\begin{table}[h]\centering\small
+\begin{table}[H]\centering\small
 \begin{tabular}{@{}clll@{}}\toprule
 Rank & FER2013 validation & KDEF cross-validation & KDEF test \\\midrule
 1 & SVM (0.505) & SVM (0.679) & Random Forest (0.614) \\
@@ -102,7 +102,7 @@ On KDEF, Logistic Regression jumps from last to second place in validation, whil
 
 \textbf{Which emotions transfer well between datasets?} To see which emotions hold up on both datasets, we compare the F1 score per emotion of the KDEF models with that of the FER-trained SVM from Task~1 (Table~\ref{tab:emotion-both}). Happy is the easiest emotion on both datasets (0.93 on KDEF and 0.75 on FER2013 for the SVM), and Surprise also scores well on both (0.62 and 0.73). Both expressions have large, distinctive shapes, a smile or an open mouth with raised eyebrows, which HOG picks up whether the expression is posed in a studio or caught in a web photo. Disgust scores well on both too, but FER2013 contains very few Disgust images (1.5\%), so this result is less certain. Fear, Sad and Angry are among the hardest emotions on both datasets, with F1 scores between 0.33 and 0.55.
 
-\begin{table}[h]\centering\small
+\begin{table}[H]\centering\small
 
 
 \begin{tabular}{@{}lcccc@{}}\toprule
