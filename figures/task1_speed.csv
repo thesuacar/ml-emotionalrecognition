@@ -1,0 +1,4 @@
+model,predict_ms,feature_extraction_ms,fit_seconds
+HOG+LogReg,0.15,0.34,1.8
+HOG+SVM,32.39,0.34,586.9
+Landmarks+RF,27.17,10.6,22.5

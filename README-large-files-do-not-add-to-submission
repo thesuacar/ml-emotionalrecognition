@@ -11,7 +11,6 @@ data/
 └── kdef
 │    ├── KDEF/
 │    └── kdef_preprocessed.pkl
-figures/
 models/
 ├── faceAndLandmarkModels/
 ├── fer_creative_best_settings.json
