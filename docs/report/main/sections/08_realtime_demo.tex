@@ -1,68 +1,17 @@
-\section{Task 6: Real-time webcam demo (10\%)}
-Adapt the best selected model into a command-line executable Python file that opens the laptop webcam and performs live emotion recognition. Preserve the exact training face crop, alignment, feature extraction, normalization and class mapping in the inference path.
+\section{Task 6: Real-time webcam demo}
+Our demo adapts the best selected model into a command-line executable Python file that opens the laptop webcam and performs live emotion recognition. We have chosen the model from \textbf{Task 4 - Fuzzy Classifier}, which was trained based on the \textit{KDEF} database.
 
-\fillme{State demo command, chosen model/.pkl, hardware/OS, measured or observed FPS/latency (if available), stability, real-world behavior, lighting/pose/occlusion issues and what was fine-tuned. Explain whether the model performed well enough, and why.}
+We added a \textbf{README} file in the root folder of the submitted files explaining how to run the demo in the terminal. The same results can be obtained by running the notebook \texttt{notebooks/06\_task6\_webcam\_demo.ipynb}. 
 
+To improve throughput, we added an image crop feature to reduce the camera frame from \textbf{1080P} to a $640 \times 640$ detection unit on the centre of the screen. The same features and methods from the fuzzy classifier section were utilised for the demo.
 
+We performed an empirical evaluation where the following protocol was followed:
 
-% Task 6 - Qualitative webcam comparison
-% Images are stored locally in outputs/task6_empirical/
+\begin{itemize}
+    \item Refer to an emotion from a \textbf{KDEF} reference
+    \item Mimic the emotion and start the simulation
+    \item Run the simulation for a while without changing the emotion displayed
+    \item Compute the results
+\end{itemize}
 
-\begin{table}[htbp]
-\centering
-\scriptsize
-\setlength{\tabcolsep}{5pt}
-\renewcommand{\arraystretch}{1.05}
-
-\begin{tabular}{lccc}
-\toprule
-Posed expression & KDEF reference & Webcam capture & Prediction \\
-\midrule
-
-Fear &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_fear} &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_fear} &
-\includegraphics[height=3cm]{../../../figures/task6_empirical/results_fear} \\
-
-Angry &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_angry} &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_angry} &
-\includegraphics[height=3cm]{../../../figures/task6_empirical/results_angry}  \\
-
-Disgust &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_disgust} &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_disgust} &
-\includegraphics[height=3cm]{../../../figures/task6_empirical/results_disgust} \\
-
-Happy &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_happy} &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_happy} &
-\includegraphics[height=3cm]{../../../figures/task6_empirical/results_happy} \\
-
-Neutral &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_neutral} &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_neutral} &
-\includegraphics[height=3cm]{../../../figures/task6_empirical/results_neutral} \\
-
-Sad &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_sad} &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_sad} &
-\includegraphics[height=3cm]{../../../figures/task6_empirical/results_sad} \\
-
-Surprise &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_surprise} &
-\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_surprise} &
-\includegraphics[height=3cm]{../../../figures/task6_empirical/results_surprise} \\
-
-\bottomrule
-\end{tabular}
-
-\caption{
-Qualitative comparison of posed KDEF expressions,
-corresponding webcam expressions, and fuzzy classifier
-predictions. KDEF subject M11, acquisition A, frontal pose.
-This illustrative experiment does not establish classification accuracy.
-}
-
-\label{tab:task6_webcam_comparison}
-\end{table}
+The final experiment data can be visualised in \ref{tab:task6_webcam_comparison}. The result summaries show that happy, sad, surprise, neutral, disgust and angry were detected in $>80\%$ of the cases. Fear, on the other hand, was extremely difficult to detect and it was confused mostly with neutral and sad.

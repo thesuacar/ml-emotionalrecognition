@@ -49,15 +49,9 @@ Example citations for later on (remove this later):
 \input{sections/08_realtime_demo.tex}
 \input{sections/09_discussion_conclusion.tex}
 \input{sections/10_ai_usage_statement.tex}
+\printbibliography[title={References}]
 
-% This is deliberately conditional: create references.bib MANUALLY via Zotero.
-\IfFileExists{references.bib}{%
-  \printbibliography[title={References}]
-}{%
-  \section*{References}
-  \fillme{Export main/references.bib manually via Zotero; insert actual APA citations.}
-}
-
+\pagebreak
 \appendix
 \input{sections/A_confusion_matrices.tex}
 \end{document}

@@ -35,6 +35,7 @@ Validation & 467 & 56 & 496 & 895 & 653 & 415 & 607 \\
 \label{fig:err-gallery}
 \end{figure}
 
+\pagebreak
 \subsection{Validation metric heatmaps (FER2013)}
 \label{app:heatmaps}
 \begin{figure}[h]
@@ -42,7 +43,7 @@ Validation & 467 & 56 & 496 & 895 & 653 & 415 & 607 \\
 \includegraphics[width=\linewidth]{../../../figures/task1_metric_heatmaps}
 \caption{Metric heatmaps of each feature--classifier combination on the FER2013 PublicTest (validation) split.}
 \end{figure}
-
+\pagebreak
 \subsection{FER2013 baseline models (PublicTest; tuned models on PrivateTest)}
 \label{app:cm-fer}
 \begin{figure}[h]
@@ -56,7 +57,7 @@ Validation & 467 & 56 & 496 & 895 & 653 & 415 & 607 \\
 \includegraphics[width=\linewidth]{../../../figures/task1_confusion_test}
 \caption{Confusion matrices of the three selected FER2013 models on the PrivateTest split, used for the final evaluation (Table~\ref{tab:fer-test}). Rows are true labels and columns are predictions; values are row-normalized.}
 \end{figure}
-
+\pagebreak
 \subsection{KDEF study, cross-dataset and creative models}
 \begin{figure}[h]
 \centering
@@ -75,7 +76,7 @@ Validation & 467 & 56 & 496 & 895 & 653 & 415 & 607 \\
 \includegraphics[width=0.6\linewidth]{../../../figures/creative_confusion_test}
 \caption{Creative-challenge final model (SVM on HOG + landmarks, cleaned training set), PrivateTest split.}
 \end{figure}
-
+\pagebreak
 \subsection{Fuzzy classifier: held-out KDEF subjects}
 
 \begin{table}[htbp]
@@ -106,3 +107,63 @@ Ne: neutral; Sa: sad; Su: surprise.
 }
 \end{table}
 
+\subsection{Empirical Analysis - Live demo detection using Fuzzy model.}
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.05}
+
+\begin{tabular}{lccc}
+\toprule
+Posed expression & KDEF reference & Webcam capture & Prediction \\
+\midrule
+
+Fear &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_fear} &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_fear} &
+\includegraphics[height=3cm]{../../../figures/task6_empirical/results_fear} \\
+
+Angry &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_angry} &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_angry} &
+\includegraphics[height=3cm]{../../../figures/task6_empirical/results_angry}  \\
+
+Disgust &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_disgust} &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_disgust} &
+\includegraphics[height=3cm]{../../../figures/task6_empirical/results_disgust} \\
+
+Happy &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_happy} &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_happy} &
+\includegraphics[height=3cm]{../../../figures/task6_empirical/results_happy} \\
+
+Neutral &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_neutral} &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_neutral} &
+\includegraphics[height=3cm]{../../../figures/task6_empirical/results_neutral} \\
+
+Sad &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_sad} &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_sad} &
+\includegraphics[height=3cm]{../../../figures/task6_empirical/results_sad} \\
+
+Surprise &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/kdef_surprise} &
+\includegraphics[height=2cm]{../../../figures/task6_empirical/webcam_surprise} &
+\includegraphics[height=3cm]{../../../figures/task6_empirical/results_surprise} \\
+
+\bottomrule
+\end{tabular}
+
+\caption{
+Qualitative comparison of posed KDEF expressions,
+corresponding webcam expressions, and fuzzy classifier
+predictions. KDEF subject M11, acquisition A, frontal pose.
+This illustrative experiment does not establish classification accuracy.
+}
+
+\label{tab:task6_webcam_comparison}
+\end{table}
