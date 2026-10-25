@@ -1,5 +1,4 @@
 \section{Datasets, preprocessing and experimental protocol}
-\label{sec:data}
 \textbf{FER2013.} Images are grayscale, $48\times48$, with seven labels: angry, disgust, fear, happy, sad, surprise and neutral. Use the provided Training split to fit models, PublicTest for model selection/tuning, and untouched PrivateTest \emph{only} for final evaluation.
 
 \textbf{KDEF.} Use only straight/frontal (S) faces, across seven comparable expressions (KDEF ``Afraid'' maps to FER ``fear''). Divide by identity: 80\% of subjects for training, 20\% for testing, with no subject overlap.
@@ -15,6 +14,4 @@ selection used training subjects only, preserving the
 held-out KDEF subjects for final evaluation.
 
 
-\textbf{FER2013 class balance.} We use the provided split: 28,709 training images, 3,589 validation images (PublicTest) and 3,589 test images (PrivateTest). The classes are strongly imbalanced (Table~\ref{tab:fer-counts}). Happy is the largest class (7,215 training images) while Disgust has only 436 (1.5\% of the training set). Task 1 deliberately uses no class weighting, so that the plain baseline can later be compared with balancing strategies in the creative challenge (Task 5).
-
-\fillme{Detected-face failures, deduplication/quality checks, exact train/validation/test protocol, seeds, tools, versions and potential limitations. Provide one dataset example if it supports a claim.}
+\fillme{Document dataset counts/class distributions; detected-face failures, deduplication/quality checks, exact train/validation/test protocol, seeds, tools, versions and potential limitations. Provide one dataset example if it supports a claim.}

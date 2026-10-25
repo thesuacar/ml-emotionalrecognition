@@ -1,80 +1,21 @@
 \section{Confusion matrices for reported models}
-\label{app:cm}
-\noindent Confusion matrices for every model reported in the main text, exported by the notebooks. FER$\rightarrow$KDEF has not been run yet: \fillme{add its confusion matrix once run}.
+\noindent\fillme{Replace every relevant slot with an actual confusion matrix exported by the corresponding notebook. Remove unreported model configurations; include matrices for all reported final models, with evaluation split, class ordering, count or normalization labeled.}
 
-\subsection{Dataset and error-analysis figures (Tasks 1 and 3)}
-\begin{table}[h]
-\centering\small
-\caption{FER2013 class counts per split.}
-\label{tab:fer-counts}
-\begin{tabular}{@{}lrrrrrrr@{}}\toprule
-Split & Angry & Disgust & Fear & Happy & Sad & Surprise & Neutral \\\midrule
-Train & 3,995 & 436 & 4,097 & 7,215 & 4,830 & 3,171 & 4,965 \\
-Validation & 467 & 56 & 496 & 895 & 653 & 415 & 607 \\
-\bottomrule\end{tabular}
-\end{table}
+\subsection{FER2013 baseline models (PublicTest; final chosen model on PrivateTest)}
+\matrixslot{HOG + Logistic Regression}{cm_fer_hog_logreg.pdf}\hfill\matrixslot{HOG + SVM}{cm_fer_hog_svm.pdf}\\[4pt]
+\matrixslot{HOG + Random Forest}{cm_fer_hog_rf.pdf}\hfill\matrixslot{Landmarks + Logistic Regression}{cm_fer_lm_logreg.pdf}\\[4pt]
+\matrixslot{Landmarks + SVM}{cm_fer_lm_svm.pdf}\hfill\matrixslot{Landmarks + Random Forest}{cm_fer_lm_rf.pdf}\\[4pt]
+\matrixslot{PCA + Logistic Regression}{cm_fer_pca_logreg.pdf}\hfill\matrixslot{PCA + SVM}{cm_fer_pca_svm.pdf}\\[4pt]
+\matrixslot{PCA + Random Forest}{cm_fer_pca_rf.pdf}\hfill\matrixslot{FER final selected (PrivateTest)}{cm_fer_final_private.pdf}
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.85\linewidth]{../../../figures/fer_class_distribution}
-\caption{FER2013 training set: class distribution.}
-\label{fig:fer-dist}
-\end{figure}
+\subsection{KDEF, cross-dataset, fuzzy and creative models}
+\matrixslot{KDEF Logistic Regression}{cm_kdef_logreg.pdf}\hfill\matrixslot{KDEF SVM}{cm_kdef_svm.pdf}\\[4pt]
+\matrixslot{KDEF Random Forest}{cm_kdef_rf.pdf}\hfill\matrixslot{FER $\rightarrow$ KDEF}{cm_fer_to_kdef.pdf}\\[4pt]
+\matrixslot{KDEF $\rightarrow$ FER}{cm_kdef_to_fer.pdf}\\[4pt]
+\matrixslot{Creative variant(s)}{cm_creative_final.pdf}\hfill\matrixslot{Additional reported model}{cm_additional.pdf}
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.85\linewidth]{../../../figures/task1_error_vs_lighting}
-\caption{Error rate against lighting (HOG + SVM, validation split).}
-\label{fig:err-light}
-\end{figure}
 
-\begin{figure}[h]
-\centering
-\includegraphics[width=\linewidth]{../../../figures/task1_hard_examples}
-\caption{Random sample of misclassified FER2013 validation images.}
-\label{fig:err-gallery}
-\end{figure}
 
-\subsection{Validation metric heatmaps (FER2013)}
-\label{app:heatmaps}
-\begin{figure}[h]
-\centering
-\includegraphics[width=\linewidth]{../../../figures/task1_metric_heatmaps}
-\caption{Metric heatmaps of each feature--classifier combination on the FER2013 PublicTest (validation) split.}
-\end{figure}
-
-\subsection{FER2013 baseline models (PublicTest; tuned models on PrivateTest)}
-\label{app:cm-fer}
-\begin{figure}[h]
-\centering
-\includegraphics[width=\linewidth]{../../../figures/task1_confusion_matrices_val}
-\caption{Confusion matrices of all nine FER2013 baseline models on the PublicTest (validation) split. Rows are true labels and columns are predictions; values are row-normalized.}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=\linewidth]{../../../figures/task1_confusion_test}
-\caption{Confusion matrices of the three selected FER2013 models on the PrivateTest split, used for the final evaluation (Table~\ref{tab:fer-test}). Rows are true labels and columns are predictions; values are row-normalized.}
-\end{figure}
-
-\subsection{KDEF study, cross-dataset and creative models}
-\begin{figure}[h]
-\centering
-\includegraphics[width=\linewidth]{../../../figures/task2_kdef_confusion_test}
-\caption{KDEF test subjects (196 images): Logistic Regression, SVM and Random Forest with HOG features, left to right.}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.6\linewidth]{../../../figures/task3_kdef_to_fer_confusion_matrix}
-\caption{KDEF$\rightarrow$FER: the Task 2 SVM trained on all KDEF frontal images, evaluated on all FER2013 images. Rows are true labels, row-normalized.}
-\end{figure}
-
-\begin{figure}[h]
-\centering
-\includegraphics[width=0.6\linewidth]{../../../figures/creative_confusion_test}
-\caption{Creative-challenge final model (SVM on HOG + landmarks, cleaned training set), PrivateTest split.}
-\end{figure}
 
 \subsection{Fuzzy classifier: held-out KDEF subjects}
 
