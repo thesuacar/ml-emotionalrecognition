@@ -1,2 +1,11 @@
 \section{Discussion, limitations and conclusion}
-\fillme{Synthesize: best features/classifiers on each dataset; relative difficulty of each emotion; changes of ranking; strongest and weakest transfers; fuzzy interpretability versus performance; benefits and costs of creative improvements; webcam readiness. Contrast dataset-specific and common limitations. Draw conclusions only from actual measurements and concrete error examples.}
+
+
+\noindent\textbf{FER2013.}
+The tuned HOG + RBF-SVM was the best baseline (test macro-F1 0.568, or 0.505 without duplicated images). HOG was the best features for Logistic Regression and the SVM, and landmarks were best for the Random Forest. Happy (F1 0.75) and Surprise (0.73) are recognised reliably. Fear, Angry, Sad and Disgust are not (F1 0.43 to 0.46 for the first three), and they are mostly confused with Sad, Neutral and each other. Several errors trace to the data rather than the model: mislabelled or ambiguous images, occlusion, non-frontal pose, and duplicated images that inflate test scores. Lighting played a smaller role, with about a five-point change in error rate (Figure~\ref{fig:err-light}).
+
+\par\medskip
+\noindent\textbf{Creative challenge.}
+Appending landmarks to HOG was the only change with a clear effect (+0.058 macro-F1 with Logistic Regression), and the final SVM reached 0.592 test macro-F1 against 0.568 for the baseline. The cost is more features (1,036 against 900), a heuristic $\gamma$ rescaling that was not tuned, and extra training time. Duplicate cleaning had no measurable effect (+0.002). Class balancing lowered macro-F1 and Disgust F1, so Disgust remains weak. Disgust recall is 0.55 on a test class of only 55 images, so that figure is noisy. The ablation used Logistic Regression rather than the final SVM, each step was a single run, and the +0.024 test gain was not tested for significance.
+
+Limits common to both datasets. [Teammates: contrast with KDEF’s controlled imagery, the transfer results, fuzzy interpretability and webcam readiness.]

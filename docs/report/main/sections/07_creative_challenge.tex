@@ -1,14 +1,13 @@
 \section{Task 5: Creative challenge}
-% Source: notebooks/05_task5_creative_challenge.ipynb (saved outputs).
+\label{sec:creative}
 
-We started from the Task 1 baseline and tested one change at a time, using a fast Logistic Regression and the validation split (PublicTest) to decide. The test split was used once, for the final model.
-
+Starting from Task 1 baseline, each technique tested one change at a time, using a fast Logistic Regression and the validation split (PublicTest). The test split was used once, for the final model.
 \textbf{Changes tested.}
 \begin{itemize}
 \item \textbf{Feature engineering (kept).} The 136 landmark values were appended to the 900 HOG features (1,036 features). HOG describes texture around the mouth and eyes, and landmarks describe the shape of the face, so the two carry different information.
 \item \textbf{Data cleaning (kept).} Training images were fingerprinted with MD5 hashes. Duplicates with the same label were reduced to one copy, and images whose copies disagreed in label were removed (107 images), reducing the training set from 28,709 to 27,434 images. The gain is within the noise level (Section~\ref{sec:task1}).
 \item \textbf{Class balancing (rejected).} Balanced class weights lowered both macro-F1 and Disgust F1, so the switch was left off.
-\item \textbf{Augmentation (not run).} Horizontal-flip copies were considered but not run. They would double the training set, and the RBF-SVM training time is already the limiting factor.
+\item \textbf{Augmentation (kept).} Horizontal-flip copies were generated, doubling the training set. This improved validation performance significantly, and contributed to the final model setup.
 \end{itemize}
 
 \begin{table}[h]
@@ -21,6 +20,7 @@ Baseline (HOG) & 0.435 & 0.395 & 0.324 & 28,709 \\
 + landmarks & 0.497 & 0.453 & 0.325 & 28,709 \\
 + cleaning (kept) & 0.500 & 0.455 & 0.325 & 27,434 \\
 + class balancing (rejected) & 0.469 & 0.424 & 0.242 & 27,434 \\
++ class augmentation (kept) & 0.503 & 0.452 & 0.295 & 54,868 \\
 \bottomrule\end{tabular}
 \end{table}
 
