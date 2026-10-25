@@ -79,5 +79,15 @@ individuals. Although the fuzzy antecedents are inspectable,
 the linear consequents and interactions between the seven
 models complicate explanations of individual predictions.
 
-% Add a numerical comparison with the Task 2 KDEF baseline
-% when the team's corresponding results are available.
+For comparison, Table~\ref{tab:kdef} reports the Task 2 classifiers
+trained on HOG features and evaluated on the same 14 held-out KDEF
+subjects (196 images). The fuzzy model reaches a macro-F1 of 0.608,
+slightly above the SVM selected on validation (0.604) and below the
+Random Forest (0.614), which scored best on the test subjects but was
+not selected on validation. Its accuracy of 63.27\% is the highest of
+the three (SVM 60.20\%, Random Forest 62.24\%, Logistic Regression
+57.65\%). These gaps correspond to a few images out of 196, so the
+fuzzy model performs comparably while using seven interpretable
+measurements instead of 900 HOG features. Its drop from validation
+(0.709) to test (0.608) is larger than the SVM's (0.679 to 0.604),
+which is consistent with the limited generalization noted above.
