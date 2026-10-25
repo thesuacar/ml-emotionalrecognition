@@ -1,15 +1,29 @@
 \section{Task 5: Creative challenge (25\%)}
-Choose and justify \textbf{at least two} FER2013 improvements: hyperparameter tuning, feature engineering/selection, class balancing, augmentation, data curation, label verification, KDEF-derived geometric information, emotion prototypes, or domain-invariant representations. \fillme{Name the actual two or more changes, implementation details, expected mechanism, and risks.}
+% Source: notebooks/05_task5_creative_challenge.ipynb (saved outputs).
 
-\begin{table}[h]\centering\small
-\caption{FER2013 controlled ablation: select with PublicTest, evaluate the final choice once on PrivateTest.}
+We started from the Task 1 baseline and tested one change at a time, using a fast Logistic Regression and the validation split (PublicTest) to decide. The test split was used once, for the final model.
+
+\textbf{Changes tested.}
+\begin{itemize}
+\item \textbf{Feature engineering (kept).} The 136 landmark values were appended to the 900 HOG features (1,036 features). HOG describes texture around the mouth and eyes, and landmarks describe the shape of the face, so the two carry different information.
+\item \textbf{Data cleaning (kept).} Training images were fingerprinted with MD5 hashes. Duplicates with the same label were reduced to one copy, and images whose copies disagreed in label were removed (107 images), reducing the training set from 28,709 to 27,434 images. The gain is within the noise level (Section~\ref{sec:task1}).
+\item \textbf{Class balancing (rejected).} Balanced class weights lowered both macro-F1 and Disgust F1, so the switch was left off.
+\item \textbf{Augmentation (not run).} Horizontal-flip copies were considered but not run. They would double the training set, and the RBF-SVM training time is already the limiting factor.
+\end{itemize}
+
+\begin{table}[h]
+\centering\small
+\caption{Validation (PublicTest) ablation with Logistic Regression. Each row adds one change to the rows above it.}
 \label{tab:creative}
-\begin{tabular}{@{}lccc@{}}\toprule
-Variant (PublicTest) & Accuracy & Bal. acc. & Macro-F1 \\\midrule
-Original baseline & -- & -- & -- \\
-Improvement A only & -- & -- & -- \\
-Improvement B only & -- & -- & -- \\
-Combined A + B & -- & -- & -- \\
+\begin{tabular}{@{}lcccc@{}}\toprule
+Variant & Accuracy & Macro-F1 & Disgust F1 & Training images \\\midrule
+Baseline (HOG) & 0.435 & 0.395 & 0.324 & 28,709 \\
++ landmarks & 0.497 & 0.453 & 0.325 & 28,709 \\
++ cleaning (kept) & 0.500 & 0.455 & 0.325 & 27,434 \\
++ class balancing (rejected) & 0.469 & 0.424 & 0.242 & 27,434 \\
 \bottomrule\end{tabular}
 \end{table}
-\fillme{Quantify gains/losses and tradeoffs. Explain class-wise and failure-case changes, computational cost, potential leakage, and one final untouched PrivateTest comparison. Reference appendix matrices.}
+
+\textbf{Final model.} The tuned Task 1 SVM ($C = 10$) was retrained on the kept changes: 1,036 features and the cleaned training set. Because the feature count rose from 900 to 1,036, $\gamma$ was rescaled by $900/1036$ to keep the kernel width comparable ($\gamma \approx 9.7\times10^{-4}$). This rescaling is a heuristic and was not tuned. On validation, the model reaches 0.607 accuracy and 0.598 macro-F1, against 0.562 for the tuned Task 1 SVM. On the test split, evaluated once, it reaches 0.594 accuracy, 0.572 balanced accuracy and 0.592 macro-F1, against 0.568 for the Task 1 SVM.
+
+\textbf{Interpretation.} Adding landmarks is the main gain (+0.058 macro-F1 for Logistic Regression), and it is consistent with the landmark-based Random Forest in Task 1, which is the best classifier on landmarks. Cleaning changes the score by 0.002, which we treat as no effect. Class balancing hurt, even though Disgust recall was low (0.25) in Task 1. The notebook does not analyze why, so we leave the mechanism open. The test gain of 0.024 macro-F1 over Task 1 is not tested for significance, and the Task 1 bootstrap interval for macro-F1 is about $\pm0.023$. Two limitations apply. The ablation uses Logistic Regression, not the final SVM, and each step is a single run. The test split still contains the 8\% of images that also appear in training (Section~\ref{sec:task1}). KDEF-derived features were not used in the final model.
