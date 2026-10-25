@@ -1,0 +1,210 @@
+\section{Supporting tables and implementation details}
+\label{app:tables}
+
+\subsection{Software environments}
+\label{app:env}
+\begin{table}[h]\centering\small
+\begin{tabular}{@{}llp{0.52\linewidth}@{}}\toprule
+Environment file & Used for & Versions \\\midrule
+\texttt{environment-general.yml} & Tasks 1, 2, 3 and 5 & Python 3.12.15, scikit-learn 1.9.1, scikit-image 0.26.0, dlib 20.0.1 \\
+\texttt{environment-fuzzy.yml} & Tasks 4 and 6 & Python 3.10.22, NumPy 1.24.4, PyFUME 0.3.4, dlib 19.24.2, scikit-learn 1.7.2 \\
+\bottomrule\end{tabular}
+\caption{Software environments used for each task.}
+\label{tab:environments}
+\end{table}
+
+\subsection{HOG feature dimensionality}
+\label{app:hog}
+Histogram of Oriented Gradients (HOG) looks at the edges in an image and identifies where the brightness changes and in which direction. To extract the features, the $48\times48$ grayscale image is cut into a $6\times6$ grid of cells of $8\times8$ pixels. In each cell, the change in brightness is measured in 9 different directions ($0^\circ, 20^\circ, \dots, 160^\circ$). We then slide a $2\times2$ block across the grid, which results in $5\times5$ overlapping block positions:
+\begin{equation*}
+\text{HOG features}
+= \underbrace{(5 \times 5)}_{\text{block positions}}
+\times \underbrace{(2 \times 2)}_{\text{cells per block}}
+\times \underbrace{9}_{\text{directions}}
+= 900
+\end{equation*}
+
+\subsection{FER2013 validation results (Task 1)}
+\label{app:fer-val}
+\begin{table}[h]
+\centering\small
+\caption{FER2013 PublicTest (validation) results for all nine feature--classifier combinations, with default settings. The selected model is in bold. Metric heatmaps are in Appendix~\ref{app:heatmaps}.}
+\label{tab:fer-val}
+\begin{tabular}{@{}llccc@{}}\toprule
+Features & Classifier & Accuracy & Bal. acc. & Macro-F1 \\\midrule
+HOG & Logistic Regression & 0.435 & 0.397 & 0.395 \\
+HOG & \textbf{SVM} & \textbf{0.542} & \textbf{0.482} & \textbf{0.505} \\
+HOG & Random Forest & 0.482 & 0.414 & 0.440 \\
+Landmarks & Logistic Regression & 0.470 & 0.397 & 0.394 \\
+Landmarks & SVM & 0.500 & 0.409 & 0.401 \\
+Landmarks & Random Forest & 0.514 & 0.456 & 0.474 \\
+PCA & Logistic Regression & 0.382 & 0.299 & 0.287 \\
+PCA & SVM & 0.477 & 0.410 & 0.430 \\
+PCA & Random Forest & 0.454 & 0.395 & 0.423 \\
+\bottomrule\end{tabular}
+\end{table}
+
+\subsection{FER2013 class counts (Task 1)}
+\label{app:fer-counts}
+\begin{table}[h]
+\centering\small
+\caption{FER2013 class counts per split.}
+\label{tab:fer-counts}
+\begin{tabular}{@{}lrrrrrrr@{}}\toprule
+Split & Angry & Disgust & Fear & Happy & Sad & Surprise & Neutral \\\midrule
+Train & 3,995 & 436 & 4,097 & 7,215 & 4,830 & 3,171 & 4,965 \\
+Validation & 467 & 56 & 496 & 895 & 653 & 415 & 607 \\
+\bottomrule\end{tabular}
+\end{table}
+
+\subsection{KDEF grid search space (Task 2)}
+\label{app:kdef-grid}
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}llp{0.5\linewidth}@{}}\toprule
+Classifier & Hyperparameter & Values searched \\\midrule
+Logistic Regression & Scaler & none, Standard, Robust, MinMax, \textbf{PowerTransformer} \\
+ & $C$ & \textbf{0.01}, 0.1, 1, 10 \\
+ & \multicolumn{2}{l}{\footnotesize\emph{20 configurations}} \\\midrule
+SVM & Scaler & Standard, Robust, \textbf{PowerTransformer} \\
+ & Kernel & linear, \textbf{RBF}, polynomial \\
+ & $C$ & 0.01, 0.1, 1, \textbf{10} \\
+ & $\gamma$ (RBF only) & 0.01, 0.001, \textbf{0.0001}, auto \\
+ & Degree (polynomial only) & 2, 3, 4 \\
+ & \multicolumn{2}{l}{\footnotesize\emph{96 configurations}} \\\midrule
+Random Forest & Number of trees & 100, \textbf{200} \\
+ & Maximum depth & 3, 5, 8, \textbf{10}, 15, 20, unlimited \\
+ & Minimum samples per leaf & 1, \textbf{2}, 5, 10, 20, 50 \\
+ & \multicolumn{2}{l}{\footnotesize\emph{84 configurations}} \\
+\bottomrule\end{tabular}
+\caption{Hyperparameter tuning grid for KDEF: Selected values (highest macro-F1) are in bold}
+\label{tab:kdef-grid}
+\end{table}
+
+\subsection{Per-emotion F1 on KDEF and FER2013 (Task 2)}
+\label{app:emotion-both}
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}lcccc@{}}\toprule
+ & \multicolumn{3}{c}{KDEF} & FER2013 \\\cmidrule(lr){2-4}\cmidrule(l){5-5}
+Emotion & Logistic Regression & SVM & Random Forest & SVM \\\midrule
+Angry & 0.50 & 0.50 & 0.65 & 0.44 \\
+Disgust & 0.53 & 0.65 & 0.69 & 0.62 \\
+Fear & 0.41 & 0.33 & 0.34 & 0.46 \\
+Happy & \textbf{0.88} & \textbf{0.93} & \textbf{0.77} & \textbf{0.75} \\
+Sad & 0.51 & 0.55 & 0.53 & 0.43 \\
+Surprise & 0.63 & 0.62 & 0.63 & 0.73 \\
+Neutral & 0.61 & 0.66 & 0.69 & 0.55 \\
+\bottomrule\end{tabular}
+\caption{F1 score per emotion - classifier comparison }
+\label{tab:emotion-both}
+\end{table}
+
+\subsection{Per-emotion F1 of the cross-dataset model (Task 3)}
+\label{app:cross-emotion}
+Happy has the best numbers probably because a happy face always has a smile, and the edges around the lips are similar in both datasets.
+\begin{table}[h]\centering\small
+\begin{tabular}{@{}lccccccc@{}}\toprule
+ & Happy & Surprise & Sad & Angry & Fear & Disgust & Neutral \\\midrule
+F1 on KDEF (cross-validation) & 0.89 & 0.71 & 0.50 & 0.66 & 0.46 & 0.69 & 0.66 \\
+F1 on FER2013 & 0.38 & 0.31 & 0.24 & 0.19 & 0.18 & 0.04 & 0.02 \\
+\bottomrule\end{tabular}
+\caption{F1 per emotion of the KDEF-trained SVM on KDEF and on FER2013.}
+\label{tab:cross-emotion}
+\end{table}
+
+\subsection{HOG features that transfer best and worst (Task 3)}
+\label{app:cross-hog}
+\begin{table}[H]\centering\small
+\begin{tabular}{@{}cccccccc@{}}\toprule
+\multicolumn{4}{c}{Transfer best} & \multicolumn{4}{c}{Transfer worst} \\\cmidrule(lr){1-4}\cmidrule(lr){5-8}
+Row & Column & Direction & Correlation & Row & Column & Direction & Correlation \\\midrule
+5 & 3 & 20 & 0.95 & 1 & 5 & 160 & -0.88 \\
+2 & 3 & 80 & 0.95 & 5 & 5 & 0 & -0.86 \\
+3 & 4 & 80 & 0.94 & 1 & 2 & 80 & -0.84 \\
+4 & 3 & 40 & 0.93 & 5 & 0 & 160 & -0.80 \\
+4 & 3 & 60 & 0.93 & 1 & 5 & 160 & -0.78 \\
+\bottomrule\end{tabular}
+\caption{The five HOG features that transfer best and worst from KDEF to FER2013. Row and column give the cell in the $6 \times 6$ grid (row 0 is the top of the image, column 0 the left), and direction is the edge angle in degrees. The same cell can appear twice because it belongs to up to four overlapping blocks.}
+\label{tab:cross-hog-features}
+\end{table}
+
+\subsection{Example fuzzy rule (Task 4)}
+\label{app:fuzzy-rule}
+\begin{quote}
+\small
+\emph{Happy, Rule 1 (abridged):}
+IF mouth width belongs to cluster 1 (Gaussian centre 0.762)
+AND mouth opening belongs to cluster 1 (centre 0.204),
+together with the remaining geometric conditions,
+THEN calculate the happiness score using the fitted linear
+consequent.
+\end{quote}
+
+\subsection{Hyperparameter tuning details (Task 1)}
+\label{app:tuning}
+The SVM grid covered $C \in \{1, 5, 10\}$ and $\gamma \in \{0.5, 1, 2\} \times 1/900$, tuned on a 10,000-image subsample of the training set; the Logistic Regression grid covered $C \in \{0.01, 0.1, 1, 10\}$; and the Random Forest grid covered maximum depth (unlimited or 25) and minimum leaf size (1, 3 or 5). The best settings were refit on the full training split and scored on validation: the SVM reached 0.562 macro-F1 ($C = 10$, $\gamma = 1/900$), against 0.505 by default; Logistic Regression ($C = 0.01$) reached 0.411; and the landmark Random Forest (maximum depth 25, minimum leaf 1) reached 0.474.
+
+\subsection{Feature and classifier discussion (Task 1)}
+\label{app:feature-discussion}
+We attribute the HOG result to its capture of local texture and edge information that distinguishes expressions (open mouth, raised or furrowed brows, wrinkles around the eyes and nose), with some invariance to illumination. Landmarks discard texture, and at $48\times48$ pixels the dlib detector works with very low resolution, so the landmark positions are noisy. Landmarks are also computed with the full image as the face box, which assumes FER crops are well aligned; this is not always true (see the error analysis in Appendix~\ref{app:figs}). PCA is a holistic linear projection of raw pixels, so it is sensitive to misalignment, pose and lighting.
+
+The most frequent errors of the validation SVM are Fear to Sad (24\% of all Fear), Sad to Neutral (19\%), Angry to Sad (18\%), Sad to Happy (17\%) and Neutral to Sad (17\%).
+
+A plausible but untested reason for the landmark result is that the forest can pick out a few informative coordinates from the 136 landmark values, while the RBF kernel, with standardized inputs and equal weight on all coordinates, is diluted by the uninformative ones.
+
+For the demo, prediction time is 0.16 ms per image for Logistic Regression, 32 ms for the SVM, and 27 ms plus 11 ms of feature extraction for the Random Forest.
+
+\subsection{KDEF image consistency (Task 2)}
+\label{app:kdef-consistency}
+The HOG features of two happy faces look very similar, and the classifiers need few examples to learn each emotion. As mentioned before, the images in the KDEF dataset are consistent and is balanced. Each facial attribute is present in a similar pixel vicinity across all images of an emotion. This makes the models learn better, unlike the FER2013 where there is no consistency in the subjects present, alignment and facial features/attributes of the face etc.
+
+\subsection{Rule activation (Task 4)}
+\label{app:rule-activation}
+The strongest rules for fear and sadness showed weaker separation, and overlapping membership functions limit their linguistic interpretation.
+
+\subsection{Dataset classifier (Task 3)}
+\label{app:dataset-clf}
+To check whether the datasets also differ in the HOG features the model uses, we trained a simple classifier to predict which dataset an image came from. We used all 980 KDEF images and a random sample of 980 FER2013 images (140 per emotion randomly chosen), so both sets had the same size and the same emotion mix. The classifier reached a balanced accuracy of 98.8\% (5-fold cross-validation).
+
+\subsection{HOG spatial mechanism (Task 3)}
+\label{app:hog-shift}
+HOG splits the image into a fixed grid of cells and records the direction of the edges in each cell, so every feature is tied to a specific location in the image. In KDEF, the eyes, eyebrows and mouth always fall into the same cells, and the model learns which cells matter for each emotion. In FER2013, faces are often shifted, tilted or cropped differently, as the mean faces in Figure~\ref{fig:mean-faces} show, so the same facial features land in different cells. Even when the expression is identical, the resulting gradient pattern can look very different from anything the model saw during training.
+
+\subsection{Subject split and fuzzy classifier details (Task 4)}
+\label{app:fuzzy-split}
+The predefined subject-independent split contained 56 training subjects (784 images) and 14 held-out test subjects (196 images). Within the training partition, 44 subjects (616 images) were used for fitting and 12 (168 images) for validation. MinMax scaling was fitted only on the corresponding training partition.
+
+\subsection{Selected KDEF model settings (Task 2)}
+The selected settings are a PowerTransformer scaler with $C = 0.01$ for Logistic Regression, a PowerTransformer scaler with an RBF kernel ($C = 10$, $\gamma = 0.0001$) for the SVM, and 200 trees with maximum depth 10 and at least 2 samples per leaf for the Random Forest.
+
+\subsection{PyFUME parameters (Task 4)}
+\label{app:fuzzy-params}
+The parameters altered from the PyFUME defaults are $setnes\_threshold=1.0$, $merge\_threshold=1.0$ and $data\_split\_method = "no\_split"$. Together they stop PyFUME from removing all fuzzy sets of a variable during rule simplification and from withholding part of the fitting data.
+
+\subsection{Demo run and detection details (Task 6)}
+\label{app:demo-run}
+We added a \textbf{README} file in the root folder of the submitted files explaining how to run the demo in the terminal. The same results can be obtained by running the notebook \texttt{notebooks/06\_task6\_webcam\_demo.ipynb}.
+
+Detection was done differently from training, since training upsampled once on the original \textit{KDEF} photos. The demo uses no upsampling on the downscaled frame.
+
+\subsection{Live demo evaluation protocol (Task 6)}
+\label{app:demo-protocol}
+\begin{itemize}
+    \item Refer to an emotion from a \textbf{KDEF} reference
+    \item Mimic the emotion and start the simulation
+    \item Run the simulation for a while without changing the emotion displayed
+    \item Compute the results
+\end{itemize}
+
+\subsection{Duplicate analysis (Task 1)}
+\label{app:dup}
+Of the 3,301 non-duplicated test images, the SVM reaches 54.2\% accuracy and 0.505 macro-F1; the 288 duplicated test images (8.0\%) reach 95.5\% accuracy and 0.943 macro-F1, and 96.9\% of the duplicates carry the same label as the training copy. The reported test score of 0.568 macro-F1 is therefore optimistic, and the non-duplicated score of 0.505 is the fairer estimate. On validation, 280 of 3,589 images (7.8\%) also appear in training, and removing them lowers the SVM's macro-F1 from 0.505 to 0.438. The drop is largest for the Random Forests (0.097 to 0.110), which memorize training samples, and smallest for the landmark models (0.008 to 0.009).
+
+\subsection{Fuzzy classifier accuracy comparison (Task 4)}
+\label{app:fuzzy-acc}
+The fuzzy model reaches 63.27\% accuracy on the held-out subjects, the highest of the three classifiers in Table~\ref{tab:kdef} (SVM 60.20\%, Random Forest 62.24\%, Logistic Regression 57.65\%). These gaps correspond to a few images out of 196. The validation drop of the fuzzy model (0.709 to 0.608) is larger than that of the SVM (0.679 to 0.604), but the two are not directly comparable: the SVM value is 5-fold cross-validation on the training subjects, whereas the fuzzy value comes from a single 12-subject validation split.
+
+\subsection{KDEF collection protocol (Task 2)}
+\label{app:kdef-desc}
+The Karolinska Directed Emotional Faces - KDEF was a dataset that was generated in 1998. It has a total of 4900 pictures, of 70 individuals displaying 7 different emotions. The subjects for this dataset was chosen with a specific selection criteria some of which include having no beard, mustache, earrings etc. All subjects were given special gray shirts and all the photos were taken at a distance of 3m from the camera. Each subject was taken photos in 2 sessions, 5 poses for each of the 7 emotions. The pose that is of most interest to us is \textit{straight}.
+
+Unlike the FER2013 dataset (which are $48\times48$ dimensions), the KDEF dataset has images of dimensions $562\times762$ and RGB images. To compare the 2 datasets, the KDEF images need to be converted to the FER2013 format: a Haar cascade detects the face, the box is enlarged by 20\% so the whole face and some context are kept, and the crop is converted to grayscale, resized to $48\times48$ and scaled to $[0,1]$.

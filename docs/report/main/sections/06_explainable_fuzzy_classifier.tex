@@ -11,15 +11,11 @@ width, while eye opening was normalized by eye width. All 980
 frontal KDEF images were processed successfully, without landmark
 detection failures.
 
-The predefined subject-independent split contained 56 training
-subjects (784 images) and 14 held-out test subjects (196 images).
-Within the training partition, 44 subjects (616 images) were used
-for fitting and 12 (168 images) for validation. MinMax scaling
-was fitted only on the corresponding training partition.
+The predefined subject-independent split (56 training and 14 held-out test subjects, with 44/12 fitting and validation subjects inside the training partition) is detailed in Appendix~\ref{app:fuzzy-split}. MinMax scaling was fitted only on the corresponding training partition.
 
 \textbf{Fuzzy model.}
 We trained seven one-versus-rest Takagi-Sugeno fuzzy models with
-PyFUME, one for each emotion. The standard settings were modified, which changes PyFUME's default rule simplification and holdout. The relevant parameters altered are: $setnes\_threshold=1.0$ , $merge\_threshold=1.0$ and $data\_split\_method$ $=$ $"no\_split"$. 
+PyFUME, one for each emotion. PyFUME's default rule simplification and holdout were disabled; the altered parameters are listed in Appendix~\ref{app:fuzzy-params}.
 
 Each model uses Gaussian membership
 functions in its rule antecedents and a learned linear consequent.
@@ -28,7 +24,7 @@ the emotion with the highest output score is selected. These
 scores are not calibrated probabilities.
 
 We compared two and three clusters per emotion using macro-F1
-on validation subjects. The three-cluster configuration was
+on validation subjects (Table~\ref{tab:fuzzy-results}). The three-cluster configuration was
 selected before testing and subsequently refitted on all 784
 training images.
 
@@ -50,29 +46,17 @@ Final test & 3 & 196 & 63.27 & 63.27 & 0.6082 \\
 
 \textbf{Rule interpretation.}
 The final system contains 21 fuzzy rules, three per emotion.
-A representative rule from the happiness model is:
-
-\begin{quote}
-\small
-\emph{Happy, Rule 1 (abridged):}
-IF mouth width belongs to cluster 1 (Gaussian centre 0.762)
-AND mouth opening belongs to cluster 1 (centre 0.204),
-together with the remaining geometric conditions,
-THEN calculate the happiness score using the fitted linear
-consequent.
-\end{quote}
+A representative rule from the happiness model, given in full in Appendix~\ref{app:fuzzy-rule}, requires mouth width and mouth opening to belong to their first clusters, together with the remaining geometric conditions, and then computes the happiness score from the fitted linear consequent.
 
 This rule dominated 94.6\% of happy training images but only
 2.2\% of other images. Its relatively wide-mouth configuration
-is consistent with smiling. The strongest rules for fear and
-sadness showed weaker separation, and overlapping membership
-functions limit their linguistic interpretation.
+is consistent with smiling. The rules for fear and sadness separate less clearly (Appendix~\ref{app:rule-activation}).
 
 \textbf{Evaluation and limitations.}
 On unseen subjects, happiness (28/28), surprise (26/28) and
 disgust (23/28) achieved the highest recall. Fear (7/28) and
 sadness (8/28) were more difficult: 14 fearful faces were
-classified as surprise, and 12 sad faces as neutral.
+classified as surprise, and 12 sad faces as neutral. The full confusion matrix is in Table~\ref{tab:fuzzy-confusion} (Appendix~\ref{app:cm}).
 The roughly ten-percentage-point accuracy decrease from
 validation to testing indicates limited generalization across
 individuals. Although the fuzzy antecedents are inspectable,
@@ -84,9 +68,5 @@ trained on HOG features and evaluated on the same 14 held-out KDEF
 subjects (196 images). The fuzzy model reaches a macro-F1 of 0.608,
 slightly above the SVM selected on validation (0.604) and below the
 Random Forest (0.614), which scored best on the test subjects but was
-not selected on validation. Its accuracy of 63.27\% is the highest of
-the three (SVM 60.20\%, Random Forest 62.24\%, Logistic Regression
-57.65\%). These gaps correspond to a few images out of 196, so the
-fuzzy model performs comparably while using seven interpretable
-measurements instead of 900 HOG features. Its drop from validation
-(0.709) to test (0.608) cannot be compared directly with the SVM's (0.679 to 0.604), because the SVM value is 5-fold cross-validation on the training subjects, whereas the fuzzy value comes from a single 12-subject validation split.
+not selected on validation. The fuzzy model performs comparably while using seven interpretable measurements instead of 900 HOG features; its accuracy and the accuracy gaps to the other classifiers, which amount to a few images out of 196, are given in Appendix~\ref{app:fuzzy-acc}. Its drop from validation
+(0.709) to test (0.608) cannot be compared directly with the SVM's (0.679 to 0.604) (Appendix~\ref{app:fuzzy-acc}).
