@@ -1,21 +1,71 @@
 \section{Task 1: FER2013 baseline (20\%)}
-\textbf{Models and features.} Compare Logistic Regression, SVM and Random Forest with HOG, facial landmarks and PCA features. Retain the supplied Random Forest + landmarks starter as a baseline. \fillme{Describe representation dimensions, scaling, PCA explained variance, model configurations and how tuning on PublicTest was controlled.}
+\label{sec:task1}
+% Numbers are taken from the saved notebook outputs (notebooks/01_task1_fer2013_models.ipynb) and figures/*.csv.
+% CHECK: the error-vs-lighting percentages below have no printed output in the notebook; verify against figures/task1_error_vs_lighting.png.
+
+\textbf{Features.} Three feature types were extracted, each compared with three classifiers ($3\times3=9$ models):
+\begin{itemize}
+\item \textbf{HOG (900 dimensions):} histogram of oriented gradients on the $48\times48$ image, 9 orientations, $8\times8$ pixel cells, $2\times2$ blocks with L2-Hys normalization. HOG encodes local edge orientation (mouth corners, brows, eye shape, wrinkles) and the block normalization gives some robustness to illumination.
+\item \textbf{Facial landmarks (136 dimensions):} the 68 dlib landmarks, centred and scaled to $[-1, 1]$. The whole $48\times48$ image is passed to dlib as the face box, so the same procedure can be reused in the real-time demo.
+\item \textbf{PCA (100 dimensions):} raw pixels scaled to $[0, 1]$, projected with whitened PCA. PCA is fitted inside the scikit-learn pipeline on the training data only, which avoids leakage into the validation and test sets.
+\end{itemize}
+
+\textbf{Classifiers.} Multinomial Logistic Regression ($C = 1$, standardized inputs), an RBF-kernel SVM ($C = 1$, $\gamma =$ ``scale'', standardized inputs) and a Random Forest (300 trees, sqrt features, no scaling). All use a fixed random seed (42).
+
+\textbf{Results on the validation set.} Table~\ref{tab:fer-val} shows accuracy, balanced accuracy and macro-F1 for all nine combinations. Macro-F1 was the selection criterion, because it weights all seven classes equally and is therefore not dominated by Happy.
 
 \begin{table}[h]
 \centering\small
-\caption{FER2013 PublicTest (validation) comparison. Fill all nine feature--model combinations; report selected model(s) separately on PrivateTest.}
+\caption{FER2013 PublicTest (validation) results for all nine feature--classifier combinations, with default settings. The selected model is in bold. Metric heatmaps are in Appendix~\ref{app:heatmaps}.}
 \label{tab:fer-val}
 \begin{tabular}{@{}llccc@{}}\toprule
 Features & Classifier & Accuracy & Bal. acc. & Macro-F1 \\\midrule
-HOG & Logistic Regression & -- & -- & -- \\
-HOG & SVM & -- & -- & -- \\
-HOG & Random Forest & -- & -- & -- \\
-Landmarks & Logistic Regression & -- & -- & -- \\
-Landmarks & SVM & -- & -- & -- \\
-Landmarks & Random Forest & -- & -- & -- \\
-PCA & Logistic Regression & -- & -- & -- \\
-PCA & SVM & -- & -- & -- \\
-PCA & Random Forest & -- & -- & -- \\
+HOG & Logistic Regression & 0.435 & 0.397 & 0.395 \\
+HOG & \textbf{SVM} & \textbf{0.542} & \textbf{0.482} & \textbf{0.505} \\
+HOG & Random Forest & 0.482 & 0.414 & 0.440 \\
+Landmarks & Logistic Regression & 0.470 & 0.397 & 0.394 \\
+Landmarks & SVM & 0.500 & 0.409 & 0.401 \\
+Landmarks & Random Forest & 0.514 & 0.456 & 0.474 \\
+PCA & Logistic Regression & 0.382 & 0.299 & 0.287 \\
+PCA & SVM & 0.477 & 0.410 & 0.430 \\
+PCA & Random Forest & 0.454 & 0.395 & 0.423 \\
 \bottomrule\end{tabular}
 \end{table}
-\textbf{Selection and failure analysis.} \fillme{Identify the strongest classifier/features on validation, give final PrivateTest accuracy/balanced accuracy/macro-F1, reference appendix matrices; compare per-emotion recall, class imbalance, hard-to-classify/mislabeled/lighting-varied samples.}
+
+\textbf{Best classifier.} The RBF-SVM is the best classifier on two of the three feature types (HOG: 0.505 macro-F1; PCA: 0.430) and the best overall. Its non-linear kernel can model the non-linear relation between local gradient patterns and expression, which the linear Logistic Regression cannot: Logistic Regression is the weakest or near-weakest classifier for every feature type (0.287 to 0.395 macro-F1). The Random Forest is competitive only on landmarks, where it is the best classifier (0.474) and clearly beats the SVM (0.401). A plausible reason, which we have not tested, is that the forest can pick out a few informative coordinates from the 136 landmark values, while the RBF kernel, with standardized inputs and equal weight on all coordinates, is diluted by the uninformative ones. The SVM is also by far the most expensive model to train (438 s on HOG, against 36 s for the forest and 6 s for Logistic Regression).
+
+\textbf{Best features.} HOG is the best representation for Logistic Regression and the SVM (for example 0.505 against 0.430 for PCA and 0.401 for landmarks with the SVM). For the Random Forest, landmarks are the best representation (0.474 against 0.440 for HOG). We attribute the HOG result to its capture of local texture and edge information that distinguishes expressions (open mouth, raised or furrowed brows, wrinkles around the eyes and nose), with some invariance to illumination. Landmarks discard texture, and at $48\times48$ pixels the dlib detector works with very low resolution, so the landmark positions are noisy. Landmarks are also computed with the full image as the face box, which assumes FER crops are well aligned; this is not always true (see the error analysis below). PCA is a holistic linear projection of raw pixels, so it is sensitive to misalignment, pose and lighting.
+
+\textbf{Hyperparameter tuning and final test result.} Each classifier was tuned on the feature set where it did best on validation. The SVM grid covered $C \in \{1, 5, 10\}$ and $\gamma \in \{0.5, 1, 2\} \times 1/900$, tuned on a 10,000-image subsample of the training set; the Logistic Regression grid covered $C \in \{0.01, 0.1, 1, 10\}$; and the Random Forest grid covered maximum depth (unlimited or 25) and minimum leaf size (1, 3 or 5). The best settings were refit on the full training split and scored on validation: the SVM reached 0.562 macro-F1 ($C = 10$, $\gamma = 1/900$), against 0.505 by default; Logistic Regression ($C = 0.01$) reached 0.411; and the landmark Random Forest (maximum depth 25, minimum leaf 1) reached 0.477. Each tuned model was then evaluated once on the private test split (Table~\ref{tab:fer-test}).
+
+\begin{table}[h]
+\centering\small
+\caption{Final test performance of each tuned classifier on the PrivateTest split, with 95\% bootstrap intervals for macro-F1 (1,000 resamples). The confusion matrices are in Appendix~\ref{app:cm}.}
+\label{tab:fer-test}
+\begin{tabular}{@{}llcccc@{}}\toprule
+Features & Classifier & Accuracy & Bal. acc. & Macro-F1 & 95\% interval \\\midrule
+HOG & SVM ($C = 10$) & 0.575 & 0.550 & 0.568 & [0.544, 0.590] \\
+Landmarks & Random Forest & 0.517 & 0.468 & 0.487 & [0.461, 0.512] \\
+HOG & Logistic Regression & 0.438 & 0.376 & 0.378 & [0.355, 0.400] \\
+\bottomrule\end{tabular}
+\end{table}
+
+The test score of the SVM is higher than its validation score (0.568 against 0.562 tuned, and 0.505 default). The paired bootstrap difference between the SVM and the landmark Random Forest is $+0.081$ with interval $[+0.057, +0.105]$, so the SVM's lead on the test split is unlikely to be noise. The gap between accuracy and balanced accuracy on validation (0.542 against 0.482) is caused mainly by the low recall of Disgust (25\%).
+
+\textbf{Which emotions are hardest to distinguish?} Averaging per-class F1 over the nine validation models gives the following ordering from hardest to easiest: Fear (0.26), Disgust (0.27), Angry (0.32), Sad (0.38), Neutral (0.43), Surprise (0.62), Happy (0.64). For the SVM on the test set, F1 is 0.75 for Happy and 0.73 for Surprise, and 0.43 to 0.46 for Angry, Sad and Fear.
+
+\begin{itemize}
+\item Happy and Surprise are relatively easier to classify. Both have distinctive, large-scale configurations: a raised, widened mouth with visible teeth for Happy, and wide-open eyes and mouth for Surprise. Happy additionally has the most training data.
+
+\item Fear, Angry and Sad are harder and are confused with each other and with Neutral. The most frequent errors of the validation SVM are Fear to Sad (24\% of all Fear), Sad to Neutral (19\%), Angry to Sad (18\%), Sad to Happy (17\%) and Neutral to Sad (17\%); the test set shows the same pattern (Appendix~\ref{app:cm}). These classes are expressed through subtle, low-intensity changes around the brows and eyes, which are hard to resolve at $48\times48$ pixels. Fear also shares features with Surprise (wide eyes, open mouth), and Sad and Neutral faces are visually close, so Neutral is a frequent ``sink'' class.
+
+\item Disgust is rare (436 training images), so the classifier rarely predicts it. On validation the SVM has precision 1.00 but recall 0.25: when it predicts Disgust it is right, but it misses most Disgust faces. On the test set recall is 0.51, but with only 55 test images this estimate is noisy. Class balancing was tested in Task 5 and did not help.
+\end{itemize}
+
+\textbf{Evidence from error analysis.} Illumination and contrast have a small effect on error. We grouped validation images into quintiles of mean brightness and of contrast (pixel standard deviation) and computed the error rate of the SVM in each group. The error rate is about 0.46 to 0.49 for the three darkest quintiles and about 0.42 to 0.44 for the brightest two, and it rises slightly from about 0.44 to 0.48 as contrast increases (Figure~\ref{fig:err-light}). The effect is around five percentage points, so illumination matters but is not the main source of error.
+
+Figure~\ref{fig:err-gallery} shows recurring problems that are properties of the dataset rather than of the model: \emph{ambiguous or questionable labels} (a screaming infant labelled Angry and predicted Happy; several wide-eyed, open-mouthed faces labelled Neutral or Fear), \emph{occlusion and context} (hands over the face, hats, two faces in the crop), \emph{non-frontal pose and head tilt}, which break the aligned-face assumption of all three feature types, and \emph{population and artefacts} (infants and elderly faces, overlaid text or watermarks). The gallery is a random sample of errors, so it is qualitative evidence, not a count of mislabelled images.
+
+\textbf{Duplicates.} FER2013 contains exact copies of images across splits, and some copies carry different labels, which is direct evidence of label noise. Of the 3,301 non-duplicated test images, the SVM reaches 54.2\% accuracy and 0.505 macro-F1; the 288 duplicated test images (8.0\%) reach 95.5\% accuracy and 0.943 macro-F1, and 96.9\% of the duplicates carry the same label as the training copy. The reported test score of 0.568 macro-F1 is therefore optimistic, and the non-duplicated score of 0.505 is the fairer estimate. On validation, 280 of 3,589 images (7.8\%) also appear in training, and removing them lowers the SVM's macro-F1 from 0.505 to 0.438. The drop is largest for the Random Forests (0.097 to 0.110), which memorize training samples, and smallest for Logistic Regression and landmark SVM (0.008 to 0.010). We treat cleaning the training set as a data curation step in Task 5.
+
+\textbf{Summary and limitations.} The tuned HOG + RBF-SVM is the best FER2013 baseline (test: 0.575 accuracy, 0.550 balanced accuracy, 0.568 macro-F1; 0.505 macro-F1 without duplicates). HOG is the strongest feature type for Logistic Regression and the SVM, and landmarks are the strongest for the Random Forest; the SVM is the strongest classifier on HOG and PCA. Happy and Surprise are recognized reliably, while Fear, Angry, Sad and Disgust are not. For the demo, prediction time is 0.15 ms per image for Logistic Regression, 32 ms for the SVM, and 27 ms plus 11 ms of feature extraction for the Random Forest. Limitations: (i) the SVM was tuned on a 10,000-image subsample; (ii) the final test was run once per model, with no further selection; (iii) no class balancing was used, which disadvantages Disgust; (iv) the landmark features depend on a detector applied to $48\times48$ images with the whole image as the face box.
