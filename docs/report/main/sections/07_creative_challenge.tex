@@ -7,7 +7,7 @@ Starting from Task 1 baseline, each technique tested one change at a time, using
 \item \textbf{Feature engineering (kept).} The 136 landmark values were appended to the 900 HOG features (1,036 features). HOG describes texture around the mouth and eyes, and landmarks describe the shape of the face, so the two carry different information.
 \item \textbf{Data cleaning (kept).} Training images were fingerprinted with MD5 hashes. Duplicates with the same label were reduced to one copy, and images whose copies disagreed in label were removed (107 images), reducing the training set from 28,709 to 27,434 images. The gain is within the noise level (Section~\ref{sec:task1}).
 \item \textbf{Class balancing (rejected).} Balanced class weights lowered both macro-F1 and Disgust F1, so the switch was left off.
-\item \textbf{Augmentation (kept).} Horizontal-flip copies were generated, doubling the training set. This improved validation performance significantly, and contributed to the final model setup.
+\item \textbf{Augmentation (rejected).} Mirrored copies of the training images (with the landmarks reflected to match) doubled the training set. Macro-F1 went from 0.455 to 0.452 and Disgust F1 from 0.325 to 0.295, so the mirrored copies were left out of the final model.
 \end{itemize}
 
 \begin{table}[h]
@@ -20,7 +20,7 @@ Baseline (HOG) & 0.435 & 0.395 & 0.324 & 28,709 \\
 + landmarks & 0.497 & 0.453 & 0.325 & 28,709 \\
 + cleaning (kept) & 0.500 & 0.455 & 0.325 & 27,434 \\
 + class balancing (rejected) & 0.469 & 0.424 & 0.242 & 27,434 \\
-+ class augmentation (kept) & 0.503 & 0.452 & 0.295 & 54,868 \\
++ mirrored augmentation (rejected) & 0.503 & 0.452 & 0.295 & 54,868 \\
 \bottomrule\end{tabular}
 \end{table}
 

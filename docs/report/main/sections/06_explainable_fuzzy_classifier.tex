@@ -89,5 +89,4 @@ the three (SVM 60.20\%, Random Forest 62.24\%, Logistic Regression
 57.65\%). These gaps correspond to a few images out of 196, so the
 fuzzy model performs comparably while using seven interpretable
 measurements instead of 900 HOG features. Its drop from validation
-(0.709) to test (0.608) is larger than the SVM's (0.679 to 0.604),
-which is consistent with the limited generalization noted above.
+(0.709) to test (0.608) cannot be compared directly with the SVM's (0.679 to 0.604), because the SVM value is 5-fold cross-validation on the training subjects, whereas the fuzzy value comes from a single 12-subject validation split.
